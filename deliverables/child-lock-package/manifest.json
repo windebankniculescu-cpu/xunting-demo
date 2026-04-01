@@ -1,0 +1,22 @@
+{
+  "name": "child-lock-package",
+  "displayName": "童锁交互模块交付包",
+  "version": "1.0.0",
+  "entry": "index.html",
+  "description": "可独立部署的童锁交互页面，包含主页、手势解锁、紧急服务、设置服务与宝宝信息卡。",
+  "platform": [
+    "web",
+    "webview",
+    "electron"
+  ],
+  "notes": {
+    "unlockPattern": [
+      1,
+      2,
+      3,
+      6
+    ],
+    "longPressMs": 2000,
+    "swipeThresholdPx": 70
+  }
+}

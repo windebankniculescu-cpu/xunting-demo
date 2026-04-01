@@ -1,0 +1,114 @@
+<svg width="900" height="1400" viewBox="0 0 900 1400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="450" y1="0" x2="450" y2="1400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FCFDFF"/>
+      <stop offset="1" stop-color="#EDF4F9"/>
+    </linearGradient>
+    <linearGradient id="shell" x1="57" y1="42" x2="842" y2="1358" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A2C127"/>
+      <stop offset="0.58" stop-color="#91B116"/>
+      <stop offset="1" stop-color="#89A90D"/>
+    </linearGradient>
+    <linearGradient id="screen" x1="121" y1="122" x2="121" y2="1278" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F1116"/>
+      <stop offset="1" stop-color="#050608"/>
+    </linearGradient>
+    <linearGradient id="card" x1="178" y1="0" x2="722" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4F8FC" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#EEF3F8" stop-opacity="0.9"/>
+    </linearGradient>
+    <radialGradient id="iconFill" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(0.35 0.3) scale(1)">
+      <stop stop-color="#D6F1FF"/>
+      <stop offset="0.7" stop-color="#BFE7FF"/>
+      <stop offset="1" stop-color="#A7DBFF"/>
+    </radialGradient>
+    <filter id="cardShadow" x="145" y="250" width="610" height="170" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#A9B8C8" flood-opacity="0.18"/>
+    </filter>
+    <filter id="softShadow" x="0" y="0" width="900" height="1400" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#596120" flood-opacity="0.18"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="1400" fill="#E9E0D4"/>
+  <g filter="url(#softShadow)">
+    <rect x="57" y="42" width="786" height="1316" rx="58" fill="url(#shell)"/>
+    <rect x="109" y="102" width="567" height="1158" rx="42" fill="url(#screen)"/>
+    <rect x="125" y="118" width="535" height="1126" rx="24" fill="url(#bg)"/>
+    <circle cx="744" cy="188" r="60" fill="#5F890D"/>
+    <rect x="700" y="400" width="88" height="182" rx="22" fill="#5F890D"/>
+    <rect x="714" y="418" width="60" height="146" rx="18" fill="#7FAA18" fill-opacity="0.6"/>
+  </g>
+
+  <text x="178" y="188" fill="#7B818C" font-family="Avenir Next, PingFang SC, sans-serif" font-size="18" font-weight="700">15:30</text>
+  <g transform="translate(535 160)" stroke="#7B818C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 1L12.5 6.2L8.2 10L12.5 13.8L6 19V1Z"/>
+    <path d="M6 10L1.8 5.8"/>
+    <path d="M6 10L1.8 14.2"/>
+  </g>
+  <g transform="translate(574 160)" stroke="#7B818C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M2 8.5C5 5.8 11 5.8 14 8.5"/>
+    <path d="M4.5 11.5C6.3 9.9 9.7 9.9 11.5 11.5"/>
+    <path d="M7.2 14.4C7.7 14 8.3 14 8.8 14.4"/>
+  </g>
+  <g transform="translate(614 164)" stroke="#7B818C" stroke-width="2">
+    <rect x="0" y="0" width="24" height="14" rx="4"/>
+    <path d="M24 4H27V10H24"/>
+    <rect x="3" y="3" width="12" height="8" rx="2" fill="#7B818C" stroke="none"/>
+  </g>
+
+  <g transform="translate(176 220)">
+    <text x="0" y="0" fill="#101218" font-family="Avenir Next, PingFang SC, sans-serif" font-size="54" font-weight="900">设置服务</text>
+  </g>
+
+  <g transform="translate(160 300)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="500" height="132" rx="30" fill="url(#card)"/>
+    <rect x="0.75" y="0.75" width="498.5" height="130.5" rx="29.25" stroke="rgba(255,255,255,0.9)"/>
+    <rect x="2" y="2" width="496" height="128" rx="28" stroke="#D7E1EA" stroke-opacity="0.9"/>
+    <rect x="2" y="2" width="496" height="128" rx="28" stroke="white" stroke-opacity="0.6"/>
+    <circle cx="66" cy="66" r="42" fill="url(#iconFill)"/>
+    <circle cx="66" cy="66" r="41" stroke="white" stroke-opacity="0.7" stroke-width="1.5"/>
+    <g transform="translate(39 38)" fill="#0A92E5">
+      <path d="M47.68 33.4c0.98 0 4.57-3.61 4.57-4.58 0-1.58-3.06-2.66-5.08-2.66-2.01 0-5.08 1.08-5.08 2.66 0 0.97 3.59 4.58 4.57 4.58z"/>
+      <path d="M60.93 19.91c0.1 0 0.18-0.04 0.24-0.1 0.06-0.06 0.1-0.14 0.1-0.23 0-0.13-0.06-0.26-0.15-0.36-3.84-3.8-9.66-6.19-13.47-6.19-3.81 0-9.56 2.39-13.37 6.19-0.09 0.1-0.15 0.23-0.15 0.36 0 0.09 0.04 0.17 0.1 0.23 0.06 0.06 0.14 0.1 0.24 0.1 0.13 0 0.26-0.05 0.36-0.14 2.71-1.72 7.38-4.34 12.82-4.34 5.44 0 10.17 2.62 12.91 4.34 0.1 0.09 0.23 0.14 0.37 0.14z"/>
+      <path d="M54.56 26.61c0.14 0 0.27-0.05 0.37-0.15 0.1-0.1 0.15-0.22 0.15-0.35 0-0.14-0.05-0.27-0.15-0.37-1.87-1.83-4.68-2.94-7.42-2.94-2.74 0-5.52 1.11-7.36 2.94-0.1 0.1-0.15 0.23-0.15 0.37 0 0.13 0.05 0.25 0.15 0.35 0.1 0.1 0.23 0.15 0.37 0.15 0.14 0 0.27-0.05 0.37-0.15 1.83-1.12 3.92-1.77 6.62-1.77 2.7 0 4.86 0.65 6.72 1.77 0.1 0.1 0.22 0.15 0.33 0.15z"/>
+    </g>
+    <text x="140" y="79" fill="#111820" font-family="Avenir Next, PingFang SC, sans-serif" font-size="38" font-weight="900">网络设置</text>
+  </g>
+
+  <g transform="translate(160 458)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="500" height="132" rx="30" fill="url(#card)"/>
+    <rect x="0.75" y="0.75" width="498.5" height="130.5" rx="29.25" stroke="rgba(255,255,255,0.9)"/>
+    <rect x="2" y="2" width="496" height="128" rx="28" stroke="#D7E1EA" stroke-opacity="0.9"/>
+    <circle cx="66" cy="66" r="42" fill="url(#iconFill)"/>
+    <path d="M51 82V52h10v60zM41 72l1-26h10v60L32 72h19zM41 38h10v10H41zM81 100H71V90h10z" fill="#0A92E5"/>
+    <text x="140" y="79" fill="#111820" font-family="Avenir Next, PingFang SC, sans-serif" font-size="38" font-weight="900">蜂窝网络</text>
+  </g>
+
+  <g transform="translate(160 616)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="500" height="132" rx="30" fill="url(#card)"/>
+    <rect x="0.75" y="0.75" width="498.5" height="130.5" rx="29.25" stroke="rgba(255,255,255,0.9)"/>
+    <rect x="2" y="2" width="496" height="128" rx="28" stroke="#D7E1EA" stroke-opacity="0.9"/>
+    <circle cx="66" cy="66" r="42" fill="url(#iconFill)"/>
+    <path d="M86 66H69l-1 8c0 1-1 2-2 2H32c-1 0-2-1-2-2l-1-8H12l-1-1c-1-1-1-1-1-3s0-2 1-3l36-34c1-1 1-1 3-1s2 0 3 1l36 34c1 1 1 4 0 5l-1 1zM30 84c0-3 2-6 6-6h28c3 0 6 3 6 6s-3 6-6 6H36c-4 0-6-3-6-6zm5 14c0-3 3-6 6-6h18c3 0 6 3 6 6s-3 6-6 6H41c-3 0-6-3-6-6z" fill="#0A92E5"/>
+    <text x="140" y="79" fill="#111820" font-family="Avenir Next, PingFang SC, sans-serif" font-size="38" font-weight="900">设备升级</text>
+  </g>
+
+  <g transform="translate(160 774)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="500" height="132" rx="30" fill="url(#card)"/>
+    <rect x="0.75" y="0.75" width="498.5" height="130.5" rx="29.25" stroke="rgba(255,255,255,0.9)"/>
+    <rect x="2" y="2" width="496" height="128" rx="28" stroke="#D7E1EA" stroke-opacity="0.9"/>
+    <circle cx="66" cy="66" r="42" fill="url(#iconFill)"/>
+    <path d="M66 24c-23 0-42 19-42 42s19 42 42 42 42-19 42-42-19-42-42-42zm0 21c4 0 8 3 8 8 0 4-4 8-8 8s-8-4-8-8c0-5 4-8 8-8zm-8 24h8c8 0 15 7 13 16l-5 23h7c4 0 8 4 8 8s-4 8-8 8h-8c-9 0-16-8-14-17l4-17c-3-1-5-4-5-7 0-4 4-8 8-8z" fill="#0A92E5"/>
+    <text x="140" y="79" fill="#111820" font-family="Avenir Next, PingFang SC, sans-serif" font-size="38" font-weight="900">关于设备</text>
+  </g>
+
+  <g transform="translate(160 932)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="500" height="132" rx="30" fill="url(#card)"/>
+    <rect x="0.75" y="0.75" width="498.5" height="130.5" rx="29.25" stroke="rgba(255,255,255,0.9)"/>
+    <rect x="2" y="2" width="496" height="128" rx="28" stroke="#D7E1EA" stroke-opacity="0.9"/>
+    <circle cx="66" cy="66" r="42" fill="url(#iconFill)"/>
+    <path d="M65.9 32.1c-13.8 0-25 11-25 24.6 0 13.6 11.2 24.6 25 24.6s25-11 25-24.6c0-13.6-11.2-24.6-25-24.6zm-28.8 33.1V42.5c-.3 0-.6 0-.9.1 5.1-11.2 16.5-19 29.7-19 13.2 0 24.6 7.8 29.7 19-.3 0-.6-.1-.9-.1v22.7c6.4 0 11.5-5.1 11.5-11.4 0-4.3-2.4-8-5.9-10C95.6 30.8 82 20.7 65.9 20.7 49.8 20.7 36.2 30.8 31.2 44.9c-3.6 1.9-6 5.7-6 10 0 6.3 5.2 11.3 11.9 11.3zm54.2 13c-6.6 6-15.4 9.7-25.1 9.7-9.7 0-18.5-3.7-25.1-9.7-11.8 5.9-19.5 16.5-19.5 30.9h89.4c0-14.4-7.9-25-19.7-31z" fill="#0A92E5"/>
+    <text x="140" y="79" fill="#111820" font-family="Avenir Next, PingFang SC, sans-serif" font-size="38" font-weight="900">联系客服</text>
+  </g>
+</svg>

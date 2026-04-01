@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>熏听机交互原型</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="scene">
+        <div class="device-stage" id="deviceStage">
+          <div class="device" id="deviceFrame" aria-label="熏听机硬件原型">
+            <div class="screen-bezel">
+              <div class="screen">
+                <header class="status-bar" aria-label="设备状态栏">
+                  <div class="status-group left">
+                    <span class="status-time">15:30</span>
+                  </div>
+                  <div class="status-group right">
+                    <span class="status-icon status-bluetooth" aria-hidden="true">
+                      <svg viewBox="0 0 16 20" role="presentation" focusable="false">
+                        <path d="M6 1 L12.5 6.2 L8.2 10 L12.5 13.8 L6 19 Z" />
+                        <path d="M6 10 L1.8 5.8" />
+                        <path d="M6 10 L1.8 14.2" />
+                      </svg>
+                    </span>
+                    <span class="status-icon status-wifi" aria-hidden="true">
+                      <svg viewBox="0 0 16 20" role="presentation" focusable="false">
+                        <path d="M2 8.5 C5 5.8 11 5.8 14 8.5" />
+                        <path d="M4.5 11.5 C6.3 9.9 9.7 9.9 11.5 11.5" />
+                        <path d="M7.2 14.4 C7.7 14.0 8.3 14.0 8.8 14.4" />
+                      </svg>
+                    </span>
+                    <span class="status-icon status-battery" aria-hidden="true">
+                      <span class="battery-level"></span>
+                    </span>
+                  </div>
+                </header>
+                <span id="lockState" hidden aria-hidden="true"></span>
+                <span id="volumeState" hidden aria-hidden="true"></span>
+
+                <section class="app-page is-active" data-page="play">
+                  <button class="play-back-btn" id="playBackBtn" aria-label="返回上一页" hidden>‹</button>
+                  <div class="album-card">
+                    <div class="album-art">
+                      <span class="album-accent"></span>
+                    </div>
+                    <div class="track-title-window" id="trackTitleWindow">
+                      <div class="track-title-rail" id="trackTitleRail">
+                        <h1 class="track-title" id="trackTitle">Disney Children's Favorites Songs Vol. 1</h1>
+                      </div>
+                    </div>
+                    <p class="album-lang" id="trackLang">英语</p>
+                  </div>
+
+                  <div class="progress-wrap">
+                    <span id="currentTime">0:42</span>
+                    <div class="progress-track" id="progressTrack" aria-label="播放进度">
+                      <div class="progress-fill" id="progressFill"></div>
+                      <button class="progress-thumb" id="progressThumb" aria-label="调整进度"></button>
+                    </div>
+                    <span id="totalTime">3:45</span>
+                  </div>
+
+                  <div class="playback-controls">
+                    <button class="icon-btn" id="prevBtn" aria-label="上一首">
+                      <span></span>
+                    </button>
+                    <button class="play-btn" id="playBtn" aria-label="播放或暂停">
+                      <span class="play-icon"></span>
+                    </button>
+                    <button class="icon-btn next" id="nextBtn" aria-label="下一首">
+                      <span></span>
+                    </button>
+                  </div>
+                </section>
+
+                <section class="app-page" data-page="chat">
+                  <div class="panel-card chat-card">
+                    <div class="robot-badge">AI</div>
+                    <h2>聊天陪伴</h2>
+                    <p>按下右上角旋钮可一键锁定儿童操作，家长可以通过聊天页快速下发播放指令。</p>
+                    <div class="chat-bubbles">
+                      <div class="bubble is-user">播放英文儿歌</div>
+                      <div class="bubble is-ai">已切换到英语磨耳朵歌单。</div>
+                      <div class="bubble is-user">音量降低一点</div>
+                      <div class="bubble is-ai">音量已调整到 68%。</div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="app-page" data-page="resource">
+                  <div class="resource-page">
+                    <div class="resource-page-inner">
+                      <header class="resource-header">
+                        <button class="resource-search resource-search-trigger" id="resourceSearchTrigger" aria-label="进入搜索资源页面">
+                          <span class="resource-search-icon">⌕</span>
+                          <span class="resource-search-placeholder">搜索资源名称</span>
+                        </button>
+                      </header>
+
+                      <div class="resource-tabs">
+                        <button class="resource-tab" data-resource-tab="general">通识</button>
+                        <button class="resource-tab is-active" data-resource-tab="english">英语</button>
+                      </div>
+
+                      <div class="resource-filters">
+                        <div class="resource-age-picker">
+                          <button class="resource-filter age" id="ageFilterBtn">3-6岁▼</button>
+                          <div class="age-dropdown" id="ageDropdown">
+                            <button class="age-option" data-age-range="0-3岁">0-3岁</button>
+                            <button class="age-option is-active" data-age-range="3-6岁">3-6岁</button>
+                            <button class="age-option" data-age-range="6-9岁">6-9岁</button>
+                            <button class="age-option" data-age-range="9-12岁">9-12岁</button>
+                            <button class="age-option" data-age-range="12岁以上">12岁以上</button>
+                          </div>
+                        </div>
+                        <button class="resource-filter discover" id="discoverFilterBtn">✧ 筛选发现</button>
+                      </div>
+
+                      <div class="resource-grid" id="resourceGrid"></div>
+                    </div>
+                    <section class="filter-sheet" id="filterSheet" aria-label="高级筛选页面">
+                      <header class="filter-sheet-header">
+                        <button class="filter-back" id="filterBackBtn" aria-label="返回资源页">‹</button>
+                        <h3>高级筛选</h3>
+                      </header>
+                      <div class="filter-sheet-body">
+                        <div class="filter-group-tabs" id="filterGroupTabs"></div>
+                        <div class="filter-options-panel">
+                          <h4 id="filterGroupTitle">时长</h4>
+                          <div class="filter-option-list" id="filterOptionList"></div>
+                        </div>
+                      </div>
+                      <button class="filter-confirm-btn" id="filterConfirmBtn">确定筛选</button>
+                    </section>
+                    <section class="filter-results-page" id="filterResultsPage" aria-label="筛选结果页面">
+                      <header class="filter-results-header">
+                        <button class="filter-back" id="filterResultsBackBtn" aria-label="返回高级筛选">‹</button>
+                        <h3>筛选结果</h3>
+                      </header>
+                      <div class="filter-results-tags" id="filterResultsTags"></div>
+                      <div class="resource-grid filter-results-grid" id="filterResultsGrid"></div>
+                    </section>
+                  </div>
+                </section>
+
+                <section class="app-page" data-page="resource-search">
+                  <div class="resource-search-page">
+                    <header class="resource-search-header">
+                      <button class="detail-back-btn" id="searchPageBackBtn" aria-label="退出搜索">‹</button>
+                      <label class="resource-search search-page-field" id="searchFieldBtn" aria-label="点击输入搜索内容">
+                        <span class="resource-search-icon">⌕</span>
+                        <input
+                          type="text"
+                          id="resourceSearchInput"
+                          class="resource-search-input"
+                          placeholder="搜索资源名称"
+                          autocomplete="off"
+                        />
+                      </label>
+                    </header>
+
+                    <div class="search-results-head">
+                      <div class="search-results-meta" id="searchResultsMeta">请输入资源关键词后点击搜索</div>
+                      <button class="search-history-clear" id="searchHistoryClearBtn" aria-label="清空搜索历史">🗑</button>
+                    </div>
+                    <div class="search-history" id="searchHistoryList"></div>
+                    <div class="resource-grid search-results-grid" id="searchResultsGrid"></div>
+
+                    <div class="search-keyboard" id="searchKeyboard" hidden>
+                      <div class="keyboard-top">
+                        <div class="keyboard-row">
+                          <button class="keyboard-key" data-key="q">q</button>
+                          <button class="keyboard-key" data-key="w">w</button>
+                          <button class="keyboard-key" data-key="e">e</button>
+                          <button class="keyboard-key" data-key="r">r</button>
+                          <button class="keyboard-key" data-key="t">t</button>
+                          <button class="keyboard-key" data-key="y">y</button>
+                          <button class="keyboard-key" data-key="u">u</button>
+                          <button class="keyboard-key" data-key="i">i</button>
+                          <button class="keyboard-key" data-key="o">o</button>
+                          <button class="keyboard-key" data-key="p">p</button>
+                        </div>
+                        <div class="keyboard-row">
+                          <button class="keyboard-key" data-key="a">a</button>
+                          <button class="keyboard-key" data-key="s">s</button>
+                          <button class="keyboard-key" data-key="d">d</button>
+                          <button class="keyboard-key" data-key="f">f</button>
+                          <button class="keyboard-key" data-key="g">g</button>
+                          <button class="keyboard-key" data-key="h">h</button>
+                          <button class="keyboard-key" data-key="j">j</button>
+                          <button class="keyboard-key" data-key="k">k</button>
+                          <button class="keyboard-key" data-key="l">l</button>
+                        </div>
+                        <div class="keyboard-row">
+                          <button class="keyboard-key wide" data-key="z">z</button>
+                          <button class="keyboard-key" data-key="x">x</button>
+                          <button class="keyboard-key" data-key="c">c</button>
+                          <button class="keyboard-key" data-key="v">v</button>
+                          <button class="keyboard-key" data-key="b">b</button>
+                          <button class="keyboard-key" data-key="n">n</button>
+                          <button class="keyboard-key" data-key="m">m</button>
+                          <button class="keyboard-key action" data-key="backspace">⌫</button>
+                        </div>
+                      </div>
+                      <div class="keyboard-bottom">
+                        <div class="keyboard-row bottom">
+                          <button class="keyboard-key action wide" data-key="space">空格</button>
+                          <button class="keyboard-key search-action" id="searchSubmitBtn">搜索</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="app-page" data-page="album-detail">
+                  <div class="album-detail-page">
+                    <header class="album-detail-header">
+                      <button class="detail-back-btn" id="detailBackBtn" aria-label="返回资源列表">‹</button>
+                      <div class="album-detail-heading">
+                        <p class="album-detail-eyebrow">资源详情</p>
+                        <h2 id="detailAlbumTitle">专辑名称</h2>
+                      </div>
+                    </header>
+
+                    <div class="album-detail-hero">
+                      <div class="album-detail-cover" id="detailAlbumCover">
+                        <span class="tile-accent"></span>
+                      </div>
+                      <div class="album-detail-summary">
+                        <p class="album-detail-desc" id="detailAlbumDesc">专辑简介</p>
+                        <button class="album-detail-expand" id="detailDescExpandBtn" aria-label="展开完整介绍">▾</button>
+                      </div>
+                    </div>
+
+                    <div class="album-detail-tags" id="detailAlbumTags"></div>
+
+                    <div class="album-detail-desc-modal" id="detailDescModal" hidden>
+                      <div class="album-detail-desc-card">
+                        <h3>完整介绍</h3>
+                        <p class="album-detail-desc-full" id="detailAlbumDescFull">专辑简介</p>
+                        <div class="album-detail-desc-actions">
+                          <button class="album-detail-collapse" id="detailDescCollapseBtn">收起</button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="lesson-section">
+                      <div class="lesson-section-head">
+                        <h3>课时列表</h3>
+                        <span id="detailLessonCount">0 节</span>
+                      </div>
+                      <div class="lesson-list" id="lessonList"></div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="app-page" data-page="apps">
+                  <div class="panel-card app-grid-card">
+                    <h2>应用中心</h2>
+                    <div class="app-grid">
+                      <article>
+                        <strong>定时关闭</strong>
+                        <span>睡前 30 分钟</span>
+                      </article>
+                      <article>
+                        <strong>蓝牙</strong>
+                        <span>已连接耳机</span>
+                      </article>
+                      <article>
+                        <strong>护耳模式</strong>
+                        <span>最高 70% 音量</span>
+                      </article>
+                      <article>
+                        <strong>学习计划</strong>
+                        <span>今日已完成 24 分钟</span>
+                      </article>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="lock-layer" id="lockLayer" aria-label="童锁模式" hidden>
+                  <div class="lock-home" id="lockHome">
+                    <div class="lock-time-block">
+                      <p class="lock-clock" id="lockClock">18:54</p>
+                      <p class="lock-date" id="lockDate">03/30 周一</p>
+                    </div>
+                    <div class="lock-track-block">
+                      <p class="lock-track-label">正在熏听</p>
+                      <h2 class="lock-track-title" id="lockTrackTitle">Disney Children's Favorites Songs Vol. 1</h2>
+                    </div>
+                    <div class="lock-bottom-block" id="lockSwipeZone">
+                      <div class="lock-action-row">
+                        <button class="lock-action emergency" id="emergencyLockBtn" aria-label="紧急呼叫提示">
+                          <span class="lock-action-icon">SOS</span>
+                        </button>
+                        <div class="lock-center-hint">
+                          <span class="lock-chevron">⌃</span>
+                          <span class="lock-center-text">熏陶中</span>
+                          <span class="lock-center-subtext">家长上滑解锁</span>
+                        </div>
+                        <button class="lock-action settings" id="settingsLockBtn" aria-label="系统设置提示">
+                          <span class="lock-action-icon">⚙</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="lock-modal" id="lockNoticeModal" hidden>
+                    <div class="lock-modal-card">
+                      <h3 class="lock-modal-title" id="lockNoticeTitle">提示</h3>
+                      <p class="lock-modal-text" id="lockNoticeText">为了避免误触，请长按按钮进入。</p>
+                      <button class="lock-modal-btn" id="lockNoticeConfirmBtn">好的</button>
+                    </div>
+                  </div>
+
+                  <div class="lock-modal" id="unlockGuideModal" hidden>
+                    <div class="lock-modal-card">
+                      <h3 class="lock-modal-title">提示</h3>
+                      <p class="lock-modal-text">为了避免误触，请先完成家长手势解锁。</p>
+                      <button class="lock-modal-btn" id="unlockGuideConfirmBtn">好的</button>
+                    </div>
+                  </div>
+
+                  <div class="gesture-panel" id="gesturePanel" hidden>
+                    <div class="gesture-panel-head">
+                      <p class="gesture-status" id="gestureStatus">请绘制解锁手势</p>
+                    </div>
+                    <div class="gesture-grid-wrap" id="gestureGridWrap">
+                      <svg class="gesture-lines" id="gestureLines" viewBox="0 0 300 300" preserveAspectRatio="none" aria-hidden="true"></svg>
+                      <div class="gesture-grid" id="gestureGrid">
+                        <button class="gesture-dot" data-dot="1" aria-label="手势点 1"></button>
+                        <button class="gesture-dot" data-dot="2" aria-label="手势点 2"></button>
+                        <button class="gesture-dot" data-dot="3" aria-label="手势点 3"></button>
+                        <button class="gesture-dot" data-dot="4" aria-label="手势点 4"></button>
+                        <button class="gesture-dot" data-dot="5" aria-label="手势点 5"></button>
+                        <button class="gesture-dot" data-dot="6" aria-label="手势点 6"></button>
+                        <button class="gesture-dot" data-dot="7" aria-label="手势点 7"></button>
+                        <button class="gesture-dot" data-dot="8" aria-label="手势点 8"></button>
+                        <button class="gesture-dot" data-dot="9" aria-label="手势点 9"></button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <section class="service-page" id="emergencyPage" hidden>
+                    <header class="service-page-header">
+                      <button class="service-back" data-service-back="home" aria-label="返回童锁主页">‹</button>
+                      <h3>紧急服务</h3>
+                    </header>
+                    <div class="service-list">
+                      <button class="service-item emergency-item" id="babyInfoEntry">
+                        <span class="service-icon emergency-card">
+                          <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <rect x="8" y="10" width="32" height="28" rx="5"></rect>
+                            <circle cx="18" cy="22" r="4"></circle>
+                            <path d="M14 31c1.8-4.3 7.2-4.3 9 0"></path>
+                            <path d="M28 18h8"></path>
+                            <path d="M28 24h8"></path>
+                            <path d="M28 30h6"></path>
+                          </svg>
+                        </span>
+                        <span>宝宝信息卡</span>
+                      </button>
+                      <button class="service-item emergency-item">
+                        <span class="service-icon emergency-siren">
+                          <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <path d="M16 31.5h16"></path>
+                            <path d="M18.5 31.5v-8.5c0-4 2.4-7 5.5-7s5.5 3 5.5 7v8.5"></path>
+                            <path d="M21 36c.9 1.4 2 2 3 2s2.1-.6 3-2"></path>
+                            <path d="M13 20c1.8-1.7 2.8-3 3.2-4.7"></path>
+                            <path d="M35 20c-1.8-1.7-2.8-3-3.2-4.7"></path>
+                            <path d="M18 12.5c.8-1.4 1.4-2.5 1.5-4"></path>
+                            <path d="M30 12.5c-.8-1.4-1.4-2.5-1.5-4"></path>
+                          </svg>
+                        </span>
+                        <span>播报警报声</span>
+                      </button>
+                      <button class="service-item emergency-item">
+                        <span class="service-icon emergency-sos">
+                          <svg viewBox="0 0 48 48" aria-hidden="true">
+                            <path d="M15 18c2.3-2.6 5.5-4.1 9-4.1s6.7 1.5 9 4.1"></path>
+                            <path d="M11 13c3.3-3.7 7.8-5.8 13-5.8S33.7 9.3 37 13"></path>
+                            <path d="M14.5 34h19"></path>
+                            <path d="M17.5 29h13"></path>
+                            <text x="24" y="31.5" text-anchor="middle">SOS</text>
+                          </svg>
+                        </span>
+                        <span>紧急呼叫</span>
+                      </button>
+                    </div>
+                  </section>
+
+                  <section class="service-page" id="babyInfoPage" hidden>
+                    <header class="service-page-header">
+                      <button class="service-back" data-service-back="emergency" aria-label="返回紧急服务">‹</button>
+                      <h3>宝宝信息卡</h3>
+                    </header>
+                    <div class="baby-card">
+                      <div class="baby-avatar">
+                        <span class="baby-hair"></span>
+                        <span class="baby-face"></span>
+                      </div>
+                      <div class="baby-info-list">
+                        <div class="baby-info-item">
+                          <span class="baby-info-label">宝宝生日</span>
+                          <strong>2021/08/16</strong>
+                        </div>
+                        <div class="baby-info-item">
+                          <span class="baby-info-label">家庭住址</span>
+                          <strong>上海市浦东新区锦绣路 188 号</strong>
+                        </div>
+                        <div class="baby-info-item">
+                          <span class="baby-info-label">紧急联系人</span>
+                          <strong>妈妈 138-0000-1122</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="service-page" id="settingsPage" hidden>
+                    <header class="service-page-header">
+                      <button class="service-back" data-service-back="home" aria-label="返回童锁主页">‹</button>
+                      <h3>设置服务</h3>
+                    </header>
+                    <div class="service-list settings-list">
+                      <button class="service-item settings-item">
+                        <span class="service-icon settings-wifi is-solid">
+                          <svg viewBox="0 0 1171 1024" aria-hidden="true">
+                            <path d="M597.61917317 848.20501302q-10.02832031 0-46.73583984-36.9t-36.64248047-46.92919922q0-16.07080078 31.37080078-27.12832031t52.00751953-11.05664063 52.00664063 11.05664063 31.37167969 27.12832031q0 10.02832031-36.64248047 46.92919922t-46.73583985 36.9zM733.19661458 712.11165364q-1.02832031 0-20.05664063-12.53583984t-50.97919921-25.13496094-64.54248047-12.53583984-64.54335938 12.53583984-50.72167968 25.13496094-20.31328125 12.53583984q-9.06503906 0-46.92919922-37.67080078t-37.92832032-46.73583984q0-6.55664063 5.01416016-11.57167969 39.15-38.7 98.42167969-60.75t117-22.11416016 117 22.11416016 98.42167969 60.75q5.01416016 5.01416016 5.01416015 11.57167969 0 9.06416016-37.92919922 46.73583984t-46.92832031 37.67080078z m137.12167969-136.60664062q-5.52832031 0-11.57167969-3.98583985-68.27167969-52.71416016-126.57832031-77.59335937T597.55501302 469.04749349q-42.68583984 0-85.62919922 11.05664062t-74.82832031 26.61503906-57.02167969 31.11416016-39.66416016 26.61416016-15.55664062 11.05664062q-8.55 0-46.22167969-37.67080078t-37.67167969-46.73583984q0-6.04248047 5.01416016-11.05664063 66.27832031-66.27832031 160.71503906-102.98583984t190.86328125-36.64335938 190.86503906 36.64335938 160.71416016 102.98583984q5.01416016 5.01416016 5.01416016 11.05664063 0 9.06416016-37.67167969 46.73583984t-46.22167969 37.67167969z m136.09248047-136.09335938q-5.52832031 0-11.05664063-4.5-89.87167969-78.87832031-186.55664062-118.8T597.61829427 276.19173177 386.44085286 316.11165364 199.88333333 434.91165364q-5.52832031 4.5-11.05664063 4.5-8.55087891 0-46.47919921-37.67080078t-37.92832032-46.73583984q0-6.55664063 5.01416016-11.57167969 93.92167969-93.40751953 223.52167969-144.64248047T597.61917317 147.55501302t264.66416016 51.23583984 223.52167969 144.64248047q5.01416016 5.01416016 5.01416015 11.57167969 0 9.06416016-37.92832031 46.73583984t-46.47919922 37.67080078z"></path>
+                          </svg>
+                        </span>
+                        <span>网络设置</span>
+                      </button>
+                      <button class="service-item settings-item">
+                        <span class="service-icon settings-cellular is-solid">
+                          <svg viewBox="0 0 1024 1024" aria-hidden="true">
+                            <path d="M796.444444 398.222222v398.222222h-113.777777V0l283.704889 396.288zM225.507556 570.766222L227.555556 227.555556h113.777777v796.444444l-284.444444-453.233778h168.391111zM227.555556 0h113.777777v113.777778H227.555556V0z m568.888888 1024h-113.777777v-113.777778h113.777777v113.777778z"></path>
+                          </svg>
+                        </span>
+                        <span>蜂窝网络</span>
+                      </button>
+                      <button class="service-item settings-item">
+                        <span class="service-icon settings-upgrade is-solid">
+                          <svg viewBox="0 0 1024 1024" aria-hidden="true">
+                            <path d="M1008.64 513.024H772.096l-6.144 104.448c0 12.288-10.24 22.528-22.528 22.528H280.576c-12.288 0-22.528-10.24-22.528-23.552L256 513.024H16.384l-7.168-6.144c-6.144-5.12-9.216-12.288-9.216-20.48s3.072-15.36 9.216-19.456L491.52 8.192c5.12-5.12 12.288-8.192 20.48-8.192s15.36 3.072 20.48 8.192l483.328 458.752c11.264 10.24 11.264 28.672 0 38.912l-7.168 7.168zM257.024 768c0-34.816 28.672-63.488 63.488-63.488h385.024c34.816 0 63.488 28.672 63.488 63.488 0 34.816-28.672 63.488-63.488 63.488H320.512c-34.816 0-63.488-28.672-63.488-63.488z m62.464 192.512c0-34.816 30.72-63.488 68.608-63.488h245.76c37.888 0 68.608 28.672 68.608 63.488 0 34.816-30.72 63.488-68.608 63.488H389.12c-37.888 0-69.632-28.672-69.632-63.488z"></path>
+                          </svg>
+                        </span>
+                        <span>设备升级</span>
+                      </button>
+                      <button class="service-item settings-item">
+                        <span class="service-icon settings-about is-solid">
+                          <svg viewBox="0 0 1024 1024" aria-hidden="true">
+                            <path d="M511.957333 85.930667c-235.648 0-426.666667 191.018667-426.666666 426.666666s191.018667 426.666667 426.666666 426.666667 426.666667-191.018667 426.666667-426.666667-191.018667-426.666667-426.666667-426.666666z m0 213.333333a42.666667 42.666667 0 1 1 0 85.333333 42.666667 42.666667 0 0 1 0-85.333333z m-42.666666 128h42.666666a42.069333 42.069333 0 0 1 41.344 50.688l-32 162.645333h33.322667a42.666667 42.666667 0 0 1 0 85.333334h-42.666667c-50.474667 0-85.888-43.818667-75.989333-93.354667l25.301333-122.624c-19.328-4.096-34.645333-19.456-34.645333-40.021333a42.666667 42.666667 0 0 1 42.666667-42.666667z"></path>
+                          </svg>
+                        </span>
+                        <span>关于设备</span>
+                      </button>
+                      <button class="service-item settings-item">
+                        <span class="service-icon settings-support is-solid">
+                          <svg viewBox="0 0 1025 1024" aria-hidden="true">
+                            <path d="M510.257495 178.265522c-139.235408 0-252.099739 110.566324-252.099739 246.948723 0 136.3784 112.864331 246.944723 252.099739 246.944723 139.231408 0 252.095739-110.566324 252.095739-246.944723C762.298233 288.831846 649.488903 178.265522 510.257495 178.265522L510.257495 178.265522 510.257495 178.265522zM219.135642 520.048524 219.135642 292.026856c-3.191009 0-6.381019 0.111-9.462028 0.389001C261.347766 180.221528 376.395103 102.070299 510.257495 102.070299c133.858392 0 248.959729 78.151229 300.577881 190.345558-3.135009-0.222001-6.270018-0.389001-9.461028-0.389001l0 228.022668c64.270188 0 116.448341-51.05815 116.448341-113.983334 0-42.772125-24.072071-80.001234-59.622175-99.542292C808.149368 165.387485 671.489967 64.055188 510.257495 64.055188c-161.236472 0-297.840873 101.332297-347.948019 242.46771-35.550104 19.485057-59.623175 56.770166-59.623175 99.486291C102.686301 468.990374 154.809454 520.048524 219.135642 520.048524L219.135642 520.048524 219.135642 520.048524zM761.794232 650.771907c-65.893193 60.242176-154.292452 97.133285-251.535737 97.133285-97.077284 0-185.365543-36.724108-251.203736-96.795284C141.261414 710.454081 63.891187 816.207391 63.891187 959.807812l895.752624 0C959.643811 815.92939 880.872581 710.06208 761.794232 650.771907L761.794232 650.771907 761.794232 650.771907zM761.794232 650.771907" />
+                          </svg>
+                        </span>
+                        <span>联系客服</span>
+                      </button>
+                    </div>
+                  </section>
+                </section>
+
+                <nav class="bottom-nav" aria-label="底部导航">
+                  <button class="nav-item" data-nav="chat">
+                    <span class="nav-icon">🤖</span>
+                    <span>聊天</span>
+                  </button>
+                  <button class="nav-item is-active" data-nav="play">
+                    <span class="nav-icon play-disc">▶</span>
+                    <span>播放</span>
+                  </button>
+                  <button class="nav-item" data-nav="resource">
+                    <span class="nav-icon">📚</span>
+                    <span>资源</span>
+                  </button>
+                  <button class="nav-item" data-nav="apps">
+                    <span class="nav-icon">🧩</span>
+                    <span>应用</span>
+                  </button>
+                </nav>
+              </div>
+            </div>
+
+            <aside class="hardware-strip" aria-label="硬件控制区">
+              <button class="hardware-knob" id="lockKnob" aria-label="童锁旋钮"></button>
+              <button class="hardware-wheel" id="scrollWheel" aria-label="滚轮切换"></button>
+              <div class="speaker">
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+                <div class="speaker-slot"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./catalog-data.js"></script>
+    <script src="./cover-manifest.js"></script>
+    <script src="./audio-manifest.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>

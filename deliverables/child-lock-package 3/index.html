@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>童锁交互模块</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="lock-app" id="lockApp" aria-label="童锁交互模块">
+        <span id="lockState" hidden aria-hidden="true"></span>
+
+        <section class="lock-home" id="lockHome">
+          <div class="top-bar">
+            <span class="status-chip is-on">童锁开启中</span>
+            <button class="enter-btn" id="enterLockBtn" type="button">重新进入童锁</button>
+          </div>
+
+          <div class="time-block">
+            <p class="clock" id="lockClock">18:54</p>
+            <p class="date" id="lockDate">03/31 周二</p>
+          </div>
+
+          <div class="track-block">
+            <p class="eyebrow">正在熏听</p>
+            <h1 class="track-title" id="lockTrackTitle">Disney Children's Favorites Songs Vol. 1</h1>
+            <p class="track-meta" id="lockTrackMeta">英语 · 第 1 节 · 03:45</p>
+          </div>
+
+          <div class="action-block" id="lockSwipeZone">
+            <div class="action-row">
+              <button class="action-btn emergency" id="emergencyLockBtn" type="button" aria-label="长按进入紧急服务">
+                <span class="action-icon">SOS</span>
+                <span class="action-label">紧急服务</span>
+              </button>
+
+              <div class="unlock-hint">
+                <span class="chevron">⌃</span>
+                <span class="hint-title">熏陶中</span>
+                <span class="hint-text">家长上滑后完成手势解锁</span>
+              </div>
+
+              <button class="action-btn settings" id="settingsLockBtn" type="button" aria-label="长按进入设置服务">
+                <span class="action-icon">⚙</span>
+                <span class="action-label">设置服务</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <div class="lock-modal" id="lockNoticeModal" hidden>
+          <div class="modal-card">
+            <h2 class="modal-title" id="lockNoticeTitle">提示</h2>
+            <p class="modal-text" id="lockNoticeText">为了避免误触，请长按按钮进入。</p>
+            <button class="modal-btn" id="lockNoticeConfirmBtn" type="button">好的</button>
+          </div>
+        </div>
+
+        <div class="lock-modal" id="unlockGuideModal" hidden>
+          <div class="modal-card">
+            <h2 class="modal-title">提示</h2>
+            <p class="modal-text">为了避免误触，请先完成家长手势解锁。</p>
+            <button class="modal-btn" id="unlockGuideConfirmBtn" type="button">继续</button>
+          </div>
+        </div>
+
+        <section class="gesture-panel" id="gesturePanel" hidden>
+          <header class="panel-head">
+            <button class="back-btn" id="gestureBackBtn" type="button" aria-label="返回童锁主页">‹</button>
+            <div>
+              <p class="panel-eyebrow">家长验证</p>
+              <h2 class="panel-title">请绘制解锁手势</h2>
+            </div>
+          </header>
+
+          <div class="gesture-grid-wrap" id="gestureGridWrap">
+            <svg class="gesture-lines" id="gestureLines" viewBox="0 0 300 300" preserveAspectRatio="none" aria-hidden="true"></svg>
+            <div class="gesture-grid" id="gestureGrid">
+              <button class="gesture-dot" data-dot="1" type="button" aria-label="手势点 1"></button>
+              <button class="gesture-dot" data-dot="2" type="button" aria-label="手势点 2"></button>
+              <button class="gesture-dot" data-dot="3" type="button" aria-label="手势点 3"></button>
+              <button class="gesture-dot" data-dot="4" type="button" aria-label="手势点 4"></button>
+              <button class="gesture-dot" data-dot="5" type="button" aria-label="手势点 5"></button>
+              <button class="gesture-dot" data-dot="6" type="button" aria-label="手势点 6"></button>
+              <button class="gesture-dot" data-dot="7" type="button" aria-label="手势点 7"></button>
+              <button class="gesture-dot" data-dot="8" type="button" aria-label="手势点 8"></button>
+              <button class="gesture-dot" data-dot="9" type="button" aria-label="手势点 9"></button>
+            </div>
+          </div>
+
+          <p class="gesture-status" id="gestureStatus">默认手势为 1 → 2 → 3 → 6</p>
+        </section>
+
+        <section class="service-page" id="emergencyPage" hidden>
+          <header class="panel-head">
+            <button class="back-btn" data-service-back="home" type="button" aria-label="返回童锁主页">‹</button>
+            <div>
+              <p class="panel-eyebrow">紧急操作</p>
+              <h2 class="panel-title">紧急服务</h2>
+            </div>
+          </header>
+
+          <div class="service-list">
+            <button class="service-item" id="babyInfoEntry" type="button">
+              <span class="service-badge emergency-tone">信息</span>
+              <div class="service-copy">
+                <strong>宝宝信息卡</strong>
+                <span>展示生日、住址、联系人</span>
+              </div>
+            </button>
+            <button class="service-item" type="button">
+              <span class="service-badge emergency-tone">警报</span>
+              <div class="service-copy">
+                <strong>播报警报声</strong>
+                <span>用于提醒附近家长</span>
+              </div>
+            </button>
+            <button class="service-item" type="button">
+              <span class="service-badge emergency-tone">SOS</span>
+              <div class="service-copy">
+                <strong>紧急呼叫</strong>
+                <span>可对接设备原生拨号能力</span>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <section class="service-page" id="babyInfoPage" hidden>
+          <header class="panel-head">
+            <button class="back-btn" data-service-back="emergency" type="button" aria-label="返回紧急服务">‹</button>
+            <div>
+              <p class="panel-eyebrow">身份信息</p>
+              <h2 class="panel-title">宝宝信息卡</h2>
+            </div>
+          </header>
+
+          <div class="baby-card">
+            <div class="baby-avatar">
+              <span class="avatar-ring"></span>
+              <span class="avatar-core"></span>
+            </div>
+            <div class="baby-info-list">
+              <div class="baby-info-item">
+                <span class="info-label">宝宝生日</span>
+                <strong>2021/08/16</strong>
+              </div>
+              <div class="baby-info-item">
+                <span class="info-label">家庭住址</span>
+                <strong>上海市浦东新区锦绣路 188 号</strong>
+              </div>
+              <div class="baby-info-item">
+                <span class="info-label">紧急联系人</span>
+                <strong>妈妈 138-0000-1122</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="service-page" id="settingsPage" hidden>
+          <header class="panel-head">
+            <button class="back-btn" data-service-back="home" type="button" aria-label="返回童锁主页">‹</button>
+            <div>
+              <p class="panel-eyebrow">家长设置</p>
+              <h2 class="panel-title">设置服务</h2>
+            </div>
+          </header>
+
+          <div class="service-list">
+            <button class="service-item" type="button">
+              <span class="service-badge settings-tone">网络</span>
+              <div class="service-copy">
+                <strong>网络设置</strong>
+                <span>Wi-Fi 与蜂窝网络配置入口</span>
+              </div>
+            </button>
+            <button class="service-item" type="button">
+              <span class="service-badge settings-tone">升级</span>
+              <div class="service-copy">
+                <strong>设备升级</strong>
+                <span>检查固件版本与升级状态</span>
+              </div>
+            </button>
+            <button class="service-item" type="button">
+              <span class="service-badge settings-tone">客服</span>
+              <div class="service-copy">
+                <strong>联系客服</strong>
+                <span>预留客服与售后入口</span>
+              </div>
+            </button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

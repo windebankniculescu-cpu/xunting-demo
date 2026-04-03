@@ -43,7 +43,7 @@
                 <section class="app-page is-active" data-page="play">
                   <button class="play-back-btn" id="playBackBtn" aria-label="返回上一页" hidden>‹</button>
                   <div class="album-card">
-                    <div class="album-art">
+                    <div class="album-art" id="playAlbumArt">
                       <span class="album-accent"></span>
                     </div>
                     <div class="track-title-window" id="trackTitleWindow">
@@ -58,6 +58,8 @@
                     <span id="currentTime">0:42</span>
                     <div class="progress-track" id="progressTrack" aria-label="播放进度">
                       <div class="progress-fill" id="progressFill"></div>
+                      <span class="ab-marker ab-marker-a" id="abMarkerA" hidden>A</span>
+                      <span class="ab-marker ab-marker-b" id="abMarkerB" hidden>B</span>
                       <button class="progress-thumb" id="progressThumb" aria-label="调整进度"></button>
                     </div>
                     <span id="totalTime">3:45</span>
@@ -74,19 +76,79 @@
                       <span></span>
                     </button>
                   </div>
+
+                  <button class="play-tool-btn play-tool-speed" id="speedBtn" aria-label="倍速播放">
+                    <span class="play-tool-label" id="speedBtnLabel">1.0x</span>
+                  </button>
+
+                  <div class="play-tools-bottom">
+                    <button class="play-tool-btn" id="abLoopBtn" aria-label="AB 循环">
+                      <span class="play-tool-icon">
+                        <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                          <path d="M4.5 15.5c1.7 2.2 4.2 3.3 7.5 3.3h1.4" />
+                          <path d="M19.5 8.5c-1.7-2.2-4.2-3.3-7.5-3.3h-1.4" />
+                          <path d="M12.9 5l-2.3.2V3" />
+                          <path d="M11.1 19l2.3-.2V21" />
+                          <path d="M8.1 14.4l-1.8-4.8-1.8 4.8" />
+                          <path d="M5.1 13.1h2.5" />
+                          <path d="M15.7 9.5h1.8c1.1 0 1.8.7 1.8 1.5 0 .6-.4 1.1-1 1.3.7.1 1.2.7 1.2 1.5 0 .9-.8 1.6-2 1.6h-1.8z" />
+                        <path d="M15.7 12.3h1.4" />
+                      </svg>
+                    </span>
+                    <span class="play-tool-label" id="abLoopLabel">AB</span>
+                  </button>
+
+                    <button class="play-tool-btn" id="playlistBtn" aria-label="专辑播放列表">
+                      <span class="play-tool-icon">
+                        <svg viewBox="0 0 24 24" role="presentation" focusable="false">
+                          <path d="M5 6.5h2.2" />
+                          <path d="M10 6.5h9" />
+                          <path d="M5 12h2.2" />
+                          <path d="M10 12h9" />
+                          <path d="M5 17.5h2.2" />
+                          <path d="M10 17.5h9" />
+                        </svg>
+                      </span>
+                      <span class="play-tool-label">列表</span>
+                    </button>
+                  </div>
+
+                  <div class="play-overlay-backdrop" id="speedPanel" hidden>
+                    <div class="play-overlay-panel speed-panel-card">
+                      <div class="play-overlay-head">
+                        <h3>倍速播放</h3>
+                        <button class="play-overlay-close" id="speedPanelCloseBtn" aria-label="关闭倍速面板">×</button>
+                      </div>
+                      <div class="speed-option-list" id="speedOptionList">
+                        <button class="speed-option is-active" data-speed="1">原速</button>
+                        <button class="speed-option" data-speed="1.25">1.25倍速</button>
+                        <button class="speed-option" data-speed="1.5">1.5倍速</button>
+                        <button class="speed-option" data-speed="1.75">1.75倍速</button>
+                        <button class="speed-option" data-speed="2">2倍速</button>
+                        <button class="speed-option" data-speed="3">3倍速</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="play-overlay-backdrop" id="playlistPanel" hidden>
+                    <div class="play-overlay-panel playlist-panel-card">
+                      <div class="play-overlay-head">
+                        <h3 id="playlistPanelTitle">专辑播放列表</h3>
+                        <button class="play-overlay-close" id="playlistPanelCloseBtn" aria-label="关闭播放列表">×</button>
+                      </div>
+                      <div class="playlist-list" id="playlistList"></div>
+                    </div>
+                  </div>
                 </section>
 
                 <section class="app-page" data-page="chat">
-                  <div class="panel-card chat-card">
-                    <div class="robot-badge">AI</div>
-                    <h2>聊天陪伴</h2>
-                    <p>按下右上角旋钮可一键锁定儿童操作，家长可以通过聊天页快速下发播放指令。</p>
-                    <div class="chat-bubbles">
-                      <div class="bubble is-user">播放英文儿歌</div>
-                      <div class="bubble is-ai">已切换到英语磨耳朵歌单。</div>
-                      <div class="bubble is-user">音量降低一点</div>
-                      <div class="bubble is-ai">音量已调整到 68%。</div>
-                    </div>
+                  <div class="chat-embed-shell">
+                    <iframe
+                      class="chat-embed-frame"
+                      src="./胖虎小龙虾1/panghu_ui/index.html?embed=1"
+                      title="胖虎小龙虾聊天页面"
+                      loading="eager"
+                    ></iframe>
                   </div>
                 </section>
 
@@ -277,6 +339,174 @@
                         <strong>学习计划</strong>
                         <span>今日已完成 24 分钟</span>
                       </article>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="app-page" data-page="pet">
+                  <div class="pet-page">
+                    <div class="pet-room pet-room-scenes" id="petRoom">
+                      <div class="pet-orchard-layer" id="petOrchardLayer" aria-label="果园收集界面" hidden>
+                        <div class="pet-orchard-sky">
+                          <span class="pet-cloud pet-cloud-a" aria-hidden="true"></span>
+                          <span class="pet-cloud pet-cloud-b" aria-hidden="true"></span>
+                          <span class="pet-cloud pet-cloud-c" aria-hidden="true"></span>
+                        </div>
+                        <div class="pet-orchard-tree" aria-hidden="true">
+                          <span class="pet-orchard-tree-image"></span>
+                          <span class="pet-orchard-bush pet-orchard-bush-left"></span>
+                          <span class="pet-orchard-bush pet-orchard-bush-right"></span>
+                          <span class="pet-orchard-flowers pet-orchard-flowers-left"></span>
+                          <span class="pet-orchard-flowers pet-orchard-flowers-right"></span>
+                        </div>
+                        <div class="pet-orchard-bubbles" id="petOrchardBubbles">
+                          <button class="pet-fruit-bubble is-apple" data-fruit-bubble="apple" aria-label="收获苹果">
+                            <span class="pet-fruit-bubble-fruit">🍎</span>
+                          </button>
+                          <button class="pet-fruit-bubble is-banana" data-fruit-bubble="banana" aria-label="收获香蕉">
+                            <span class="pet-fruit-bubble-fruit">🍌</span>
+                          </button>
+                          <button class="pet-fruit-bubble is-orange" data-fruit-bubble="orange" aria-label="收获橙子">
+                            <span class="pet-fruit-bubble-fruit">🍊</span>
+                          </button>
+                          <button class="pet-fruit-bubble is-grape" data-fruit-bubble="grape" aria-label="收获葡萄">
+                            <span class="pet-fruit-bubble-fruit">🍇</span>
+                          </button>
+                        </div>
+                        <div class="pet-orchard-hills" aria-hidden="true">
+                          <span class="pet-hill pet-hill-back"></span>
+                          <span class="pet-hill pet-hill-front"></span>
+                        </div>
+                      </div>
+                      <button class="pet-orchard-pull" id="petOrchardPull" aria-expanded="false" aria-controls="petOrchardLayer" hidden>
+                        <span class="pet-orchard-pull-grass" aria-hidden="true"></span>
+                        <span class="pet-orchard-pull-label">果园</span>
+                        <span class="pet-orchard-pull-hint">下拉收集果子</span>
+                      </button>
+
+                      <div class="pet-main-content pet-main-scenes">
+                        <div class="pet-top-stats pet-top-progress">
+                          <div class="pet-scene-progress-card">
+                            <div class="pet-scene-progress-head">
+                              <span class="pet-scene-progress-label" id="petSceneMetricLabel">饱食度</span>
+                              <strong class="pet-scene-progress-value" id="petSceneMetricValue">0</strong>
+                            </div>
+                            <div class="pet-scene-progress-bar">
+                              <div class="pet-scene-progress-fill" id="petSceneMetricFill"></div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="pet-scene-carousel" id="petSceneCarousel">
+                          <div class="pet-scene-track" id="petSceneTrack">
+                            <section class="pet-scene-slide is-active" data-pet-scene="restaurant">
+                              <div class="pet-scene pet-scene-theme restaurant">
+                                <div class="pet-scene-room-bg">
+                                  <span class="pet-scene-wall"></span>
+                                  <span class="pet-scene-window"></span>
+                                  <span class="pet-scene-floor"></span>
+                                  <span class="pet-scene-table"></span>
+                                  <span class="pet-scene-chair pet-scene-chair-left"></span>
+                                  <span class="pet-scene-chair pet-scene-chair-right"></span>
+                                </div>
+                              </div>
+                            </section>
+
+                            <section class="pet-scene-slide" data-pet-scene="living">
+                              <div class="pet-scene pet-scene-theme living">
+                                <div class="pet-scene-room-bg">
+                                  <span class="pet-scene-wall"></span>
+                                  <span class="pet-scene-floor"></span>
+                                  <span class="pet-scene-sofa"></span>
+                                  <span class="pet-scene-table-round"></span>
+                                  <span class="pet-scene-lamp"></span>
+                                  <span class="pet-scene-frame"></span>
+                                </div>
+                              </div>
+                            </section>
+
+                            <section class="pet-scene-slide" data-pet-scene="bathroom">
+                              <div class="pet-scene pet-scene-theme bathroom">
+                                <div class="pet-scene-room-bg">
+                                  <span class="pet-scene-wall"></span>
+                                  <span class="pet-scene-floor"></span>
+                                  <span class="pet-scene-bathtub"></span>
+                                  <span class="pet-scene-mirror"></span>
+                                  <span class="pet-scene-sink"></span>
+                                  <span class="pet-scene-bubbles"></span>
+                                </div>
+                              </div>
+                            </section>
+
+                            <section class="pet-scene-slide" data-pet-scene="bedroom">
+                              <div class="pet-scene pet-scene-theme bedroom">
+                                <div class="pet-scene-room-bg">
+                                  <span class="pet-scene-wall"></span>
+                                  <span class="pet-scene-floor"></span>
+                                  <span class="pet-scene-bed"></span>
+                                  <span class="pet-scene-pillows"></span>
+                                  <span class="pet-scene-moon-window"></span>
+                                  <span class="pet-scene-stars"></span>
+                                </div>
+                              </div>
+                            </section>
+                          </div>
+                          <button class="pet-poop-marker" id="petPoopMarker" type="button" aria-label="臭臭" hidden>
+                            <span class="sr-only">臭臭</span>
+                          </button>
+                          <span class="pet-broom-marker" id="petBroomMarker" aria-hidden="true" hidden></span>
+                          <button class="pet-cleanup-btn" id="petCleanupBtn" type="button" hidden>清理</button>
+                          <div class="pet-speech-bubble" id="petSpeechBubble" hidden>
+                            <span class="pet-speech-text" id="petSpeechText"></span>
+                          </div>
+                          <div class="pet-egg-stage" id="petEggStage">
+                            <div class="pet-egg" id="petEgg">
+                              <span class="pet-egg-image" aria-hidden="true"></span>
+                              <span class="pet-accessory pet-accessory-head" id="petAccessoryHead" aria-hidden="true"></span>
+                              <span class="pet-accessory pet-accessory-face" id="petAccessoryFace" aria-hidden="true"></span>
+                              <span class="pet-accessory pet-accessory-clothes" id="petAccessoryClothes" aria-hidden="true"></span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="pet-scene-pager" id="petScenePager">
+                          <button class="pet-scene-dot is-active" data-pet-scene-target="restaurant" aria-label="餐厅场景"></button>
+                          <button class="pet-scene-dot" data-pet-scene-target="living" aria-label="客厅场景"></button>
+                          <button class="pet-scene-dot" data-pet-scene-target="bathroom" aria-label="卫生间场景"></button>
+                          <button class="pet-scene-dot" data-pet-scene-target="bedroom" aria-label="卧室场景"></button>
+                        </div>
+
+                        <div class="pet-exp-row">
+                          <span class="pet-exp-label">经验值</span>
+                          <div class="pet-exp-card">
+                            <div class="pet-exp-bar">
+                              <div class="pet-exp-fill" id="petExpFill"></div>
+                            </div>
+                            <span class="pet-exp-text" id="petExpText">LV 1 · EXP 0</span>
+                          </div>
+                        </div>
+
+                        <p class="pet-status-text" id="petStatusText">状态：健康</p>
+
+                        <div class="pet-custom-panel">
+                          <div class="pet-custom-header">
+                            <span class="pet-custom-scene-name" id="petSceneName">餐厅场景</span>
+                            <span class="pet-custom-action-name" id="petActionName">喂食</span>
+                          </div>
+                          <div class="pet-item-grid" id="petItemGrid"></div>
+                        </div>
+                      </div>
+
+                      <div class="pet-harvest-modal" id="petHarvestModal" hidden>
+                        <div class="pet-harvest-card">
+                          <div class="pet-harvest-illustration" id="petHarvestIllustration">
+                            <span class="pet-harvest-jar"></span>
+                            <span class="pet-harvest-fruit" id="petHarvestFruitEmoji">🍎</span>
+                          </div>
+                          <p class="pet-harvest-text" id="petHarvestText">物品已存放至物品栏</p>
+                          <button class="pet-harvest-confirm" id="petHarvestConfirmBtn">好的</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </section>
@@ -481,6 +711,16 @@
                   <button class="nav-item" data-nav="resource">
                     <span class="nav-icon">📚</span>
                     <span>资源</span>
+                  </button>
+                  <button class="nav-item" data-nav="pet">
+                    <span class="nav-icon pet-nav-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 5.2c2 0 3.9 1.5 4.3 3.6.5 2.3-.5 4.6-2.3 5.8 2.2.4 4 2.1 4.4 4.3.2 1.2-.8 2.1-2 2.1H7.6c-1.2 0-2.2-.9-2-2.1.4-2.2 2.2-3.9 4.4-4.3-1.8-1.2-2.8-3.5-2.3-5.8.4-2.1 2.3-3.6 4.3-3.6z" />
+                        <path d="M7 6.8a1.8 1.8 0 1 1 0-3.6 1.8 1.8 0 0 1 0 3.6z" />
+                        <path d="M17 6.8a1.8 1.8 0 1 1 0-3.6 1.8 1.8 0 0 1 0 3.6z" />
+                      </svg>
+                    </span>
+                    <span>宠物</span>
                   </button>
                   <button class="nav-item" data-nav="apps">
                     <span class="nav-icon">🧩</span>

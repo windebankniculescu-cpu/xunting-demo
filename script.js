@@ -34,12 +34,57 @@ const totalTimeEl = document.getElementById("totalTime");
 const progressTrack = document.getElementById("progressTrack");
 const progressFill = document.getElementById("progressFill");
 const progressThumb = document.getElementById("progressThumb");
+const abMarkerA = document.getElementById("abMarkerA");
+const abMarkerB = document.getElementById("abMarkerB");
 const deviceStage = document.getElementById("deviceStage");
 const deviceFrame = document.getElementById("deviceFrame");
 const playBtn = document.getElementById("playBtn");
+const playAlbumArt = document.getElementById("playAlbumArt");
 const playBackBtn = document.getElementById("playBackBtn");
 const prevBtn = document.getElementById("prevBtn");
 const nextBtn = document.getElementById("nextBtn");
+const speedBtn = document.getElementById("speedBtn");
+const speedBtnLabel = document.getElementById("speedBtnLabel");
+const abLoopBtn = document.getElementById("abLoopBtn");
+const abLoopLabel = document.getElementById("abLoopLabel");
+const playlistBtn = document.getElementById("playlistBtn");
+const speedPanel = document.getElementById("speedPanel");
+const speedPanelCloseBtn = document.getElementById("speedPanelCloseBtn");
+const speedOptionList = document.getElementById("speedOptionList");
+const playlistPanel = document.getElementById("playlistPanel");
+const playlistPanelCloseBtn = document.getElementById("playlistPanelCloseBtn");
+const playlistPanelTitle = document.getElementById("playlistPanelTitle");
+const playlistList = document.getElementById("playlistList");
+const petSceneMetricLabel = document.getElementById("petSceneMetricLabel");
+const petSceneMetricValue = document.getElementById("petSceneMetricValue");
+const petSceneMetricFill = document.getElementById("petSceneMetricFill");
+const petExpFill = document.getElementById("petExpFill");
+const petExpText = document.getElementById("petExpText");
+const petEgg = document.getElementById("petEgg");
+const petEggStage = document.getElementById("petEggStage");
+const petAccessoryHead = document.getElementById("petAccessoryHead");
+const petAccessoryFace = document.getElementById("petAccessoryFace");
+const petAccessoryClothes = document.getElementById("petAccessoryClothes");
+const petSpeechBubble = document.getElementById("petSpeechBubble");
+const petSpeechText = document.getElementById("petSpeechText");
+const petPoopMarker = document.getElementById("petPoopMarker");
+const petBroomMarker = document.getElementById("petBroomMarker");
+const petCleanupBtn = document.getElementById("petCleanupBtn");
+const petSceneCarousel = document.getElementById("petSceneCarousel");
+const petSceneTrack = document.getElementById("petSceneTrack");
+const petScenePager = document.getElementById("petScenePager");
+const petSceneName = document.getElementById("petSceneName");
+const petActionName = document.getElementById("petActionName");
+const petItemGrid = document.getElementById("petItemGrid");
+const petStatusText = document.getElementById("petStatusText");
+const petRoom = document.getElementById("petRoom");
+const petOrchardLayer = document.getElementById("petOrchardLayer");
+const petOrchardPull = document.getElementById("petOrchardPull");
+const petOrchardBubbles = document.getElementById("petOrchardBubbles");
+const petHarvestModal = document.getElementById("petHarvestModal");
+const petHarvestFruitEmoji = document.getElementById("petHarvestFruitEmoji");
+const petHarvestText = document.getElementById("petHarvestText");
+const petHarvestConfirmBtn = document.getElementById("petHarvestConfirmBtn");
 const bottomNav = document.querySelector(".bottom-nav");
 const navItems = [...document.querySelectorAll(".nav-item")];
 const pages = [...document.querySelectorAll(".app-page")];
@@ -70,6 +115,7 @@ const detailDescCollapseBtn = document.getElementById("detailDescCollapseBtn");
 const ageFilterBtn = document.getElementById("ageFilterBtn");
 const ageDropdown = document.getElementById("ageDropdown");
 const ageOptions = [...document.querySelectorAll("[data-age-range]")];
+const ageFilterPicker = ageFilterBtn?.closest(".resource-age-picker");
 const discoverFilterBtn = document.getElementById("discoverFilterBtn");
 const filterSheet = document.getElementById("filterSheet");
 const filterBackBtn = document.getElementById("filterBackBtn");
@@ -133,6 +179,12 @@ let isDrawingGesture = false;
 let gesturePath = [];
 let longPressTimer = null;
 let longPressTriggered = false;
+let pendingAutoplay = false;
+let currentPlaybackRate = 1;
+let abLoopStart = null;
+let abLoopEnd = null;
+let lastAnalyticsUpdateAt = null;
+let currentPetTab = "head";
 
 const searchSuggestionAliases = {
   "大猫": { query: "Big Cat", tags: ["分级阅读", "英语", "学习"] },
@@ -145,6 +197,210 @@ const searchSuggestionAliases = {
 };
 
 const unlockPattern = ["1", "2", "3", "6"];
+const playbackRateOptions = [1, 1.25, 1.5, 1.75, 2, 3];
+const petStorageKey = "pet-analytics-state-v1";
+const petPoopFeatureEnabled = false;
+const petFeedCatalog = [
+  { key: "apple", name: "苹果", emoji: "🍎", count: 10, decorStyle: "top-hat" },
+  { key: "banana", name: "香蕉", emoji: "🍌", count: 10, decorStyle: "orange" },
+  { key: "orange", name: "橙子", emoji: "🍊", count: 10, decorStyle: "sprout" },
+  { key: "grape", name: "葡萄", emoji: "🍇", count: 10, decorStyle: "leaf" },
+];
+const orchardBubbleCatalog = [
+  { key: "apple", emoji: "🍎" },
+  { key: "banana", emoji: "🍌" },
+  { key: "orange", emoji: "🍊" },
+  { key: "grape", emoji: "🍇" },
+];
+const petFaceCatalog = [
+  { key: "pet", name: "抚摸", emoji: "🖐" },
+  { key: "play", name: "玩耍", emoji: "🎾" },
+  { key: "hug", name: "抱抱", emoji: "🤍" },
+  { key: "chat", name: "聊天", emoji: "💬" },
+];
+const petInteractionFeedback = {
+  pet: "好温暖～",
+  play: "好快乐！",
+  hug: "抱抱真好～",
+  chat: "想继续陪你～",
+};
+const petWashCatalog = [
+  { key: "bath", name: "洗澡", emoji: "🛁", feedback: "好舒服～" },
+  { key: "brush", name: "刷牙", emoji: "🪥", feedback: "亮晶晶～" },
+  { key: "wash", name: "梳洗", emoji: "🫧", feedback: "清清爽爽～" },
+  { key: "spa", name: "香香", emoji: "🧴", feedback: "香喷喷～" },
+];
+const petSleepCatalog = [
+  { key: "nap", name: "小憩", emoji: "🌙", feedback: "呼～" },
+  { key: "sleep", name: "安睡", emoji: "💤", feedback: "ZZZ" },
+  { key: "blanket", name: "盖被", emoji: "🛏️", feedback: "暖呼呼～" },
+  { key: "story", name: "听故事", emoji: "📖", feedback: "好安心～" },
+];
+const petSceneConfig = [
+  { key: "restaurant", name: "餐厅场景", actionName: "喂食", metricKey: "satietyPoints", metricLabel: "饱食度", operation: "feed" },
+  { key: "living", name: "客厅场景", actionName: "互动", metricKey: "affinityPoints", metricLabel: "好感度", operation: "interaction" },
+  { key: "bathroom", name: "卫生间场景", actionName: "洗漱", metricKey: "cleanlinessPoints", metricLabel: "清洁值", operation: "wash" },
+  { key: "bedroom", name: "卧室场景", actionName: "休息", metricKey: "sleepPoints", metricLabel: "睡眠值", operation: "rest" },
+];
+
+function loadPetState() {
+  const fallback = {
+    englishSeconds: 0,
+    generalSeconds: 0,
+    interactionCount: 0,
+    feedBonus: 0,
+    satietyPoints: 0,
+    affinityPoints: 0,
+    cleanlinessPoints: 60,
+    sleepPoints: 60,
+    generalRewardProgress: 0,
+    orchardRewardProgress: 0,
+    lastStatDecayAt: Date.now(),
+    fruitInventory: Object.fromEntries(petFeedCatalog.map((item) => [item.key, item.count])),
+    orchardAvailable: Object.fromEntries(petFeedCatalog.map((item) => [item.key, 0])),
+    orchardHarvestedAt: {},
+    poop: {
+      active: false,
+      selected: false,
+      createdAt: 0,
+      overdueApplied: false,
+      left: 50,
+      top: 334,
+    },
+    selectedHead: "",
+    selectedFace: "",
+    selectedClothes: "",
+  };
+
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(petStorageKey) || "null");
+    if (!saved || typeof saved !== "object") {
+      return fallback;
+    }
+
+    return {
+      englishSeconds: Number(saved.englishSeconds) || 0,
+      generalSeconds: Number(saved.generalSeconds) || 0,
+      interactionCount: Number(saved.interactionCount) || 0,
+      feedBonus: Number(saved.feedBonus) || 0,
+      satietyPoints: Math.max(
+        0,
+        Math.min(
+          100,
+          Number.isFinite(Number(saved.satietyPoints))
+            ? Number(saved.satietyPoints)
+            : Math.floor((Number(saved.generalSeconds) || 0) / 600) + (Number(saved.feedBonus) || 0),
+        ),
+      ),
+      affinityPoints: Math.max(
+        0,
+        Math.min(
+          100,
+          Number.isFinite(Number(saved.affinityPoints))
+            ? Number(saved.affinityPoints)
+            : (Number(saved.interactionCount) || 0) * 5,
+        ),
+      ),
+      cleanlinessPoints: Math.max(0, Math.min(100, Number(saved.cleanlinessPoints) || 60)),
+      sleepPoints: Math.max(0, Math.min(100, Number(saved.sleepPoints) || 60)),
+      generalRewardProgress: Number(saved.generalRewardProgress) || ((Number(saved.generalSeconds) || 0) % 600),
+      orchardRewardProgress: Number(saved.orchardRewardProgress) || 0,
+      lastStatDecayAt: Number(saved.lastStatDecayAt) || Date.now(),
+      fruitInventory: Object.fromEntries(
+        petFeedCatalog.map((item) => [
+          item.key,
+          Math.max(item.count, Number(saved.fruitInventory?.[item.key]) || 0),
+        ]),
+      ),
+      orchardAvailable: {
+        ...fallback.orchardAvailable,
+        ...(saved.orchardAvailable || {}),
+      },
+      orchardHarvestedAt: {
+        ...fallback.orchardHarvestedAt,
+        ...(saved.orchardHarvestedAt || {}),
+      },
+      poop: {
+        ...fallback.poop,
+        ...(saved.poop || {}),
+      },
+      // Reset old decoration selections so the egg starts clean.
+      selectedHead: "",
+      selectedFace: "",
+      selectedClothes: "",
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+const petState = loadPetState();
+if (!petPoopFeatureEnabled) {
+  petState.poop = {
+    active: false,
+    selected: false,
+    createdAt: 0,
+    overdueApplied: false,
+    left: 50,
+    top: 334,
+  };
+}
+savePetState();
+
+function savePetState() {
+  try {
+    window.localStorage.setItem(petStorageKey, JSON.stringify(petState));
+  } catch {
+    // ignore localStorage failures
+  }
+}
+
+function prepareTransparentSprite(fileName, callback) {
+  const image = new Image();
+  image.onload = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      callback(`./${fileName}`);
+      return;
+    }
+    ctx.drawImage(image, 0, 0);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const { data } = imageData;
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+      const brightness = (r + g + b) / 3;
+      const chroma = Math.max(r, g, b) - Math.min(r, g, b);
+      if (brightness > 205 && chroma < 34) {
+        data[i + 3] = 0;
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+    callback(canvas.toDataURL("image/png"));
+  };
+  image.onerror = () => callback(`./${fileName}`);
+  image.src = `./${fileName}`;
+}
+
+function initPetCleanupAssets() {
+  prepareTransparentSprite("9fuYKxFRz3.jpg", (url) => {
+    petPoopMarker?.style.setProperty("--pet-poop-image", `url("${url}")`);
+  });
+  prepareTransparentSprite("F1ITziXrIS.jpg", (url) => {
+    petBroomMarker?.style.setProperty("--pet-broom-image", `url("${url}")`);
+  });
+}
+
+function createPoopSpawnPosition() {
+  return {
+    left: 42 + Math.random() * 18,
+    top: 314 + Math.random() * 36,
+  };
+}
 
 const filterGroups = [
   { key: "duration", label: "时长", options: ["1-3min", "3-10min", "10-20min", "20+min"] },
@@ -164,6 +420,18 @@ const createEmptyFilters = () => ({
 
 let selectedFilters = createEmptyFilters();
 let appliedFilters = createEmptyFilters();
+let petOrchardOffset = 0;
+let isDraggingPetOrchard = false;
+let petOrchardStartY = 0;
+let petOrchardStartOffset = 0;
+let petOrchardDragMoved = false;
+let orchardRefreshTimer = null;
+let petSpeechTimer = null;
+let petFeedReactionTimer = null;
+let petPoopSweepTimer = null;
+let currentPetSceneIndex = 0;
+let petSceneSwipeStartX = 0;
+let isDraggingPetScene = false;
 
 const ageOptionsByTab = {
   general: ["0-3岁", "3-6岁", "6-9岁", "9-12岁", "12岁以上"],
@@ -274,6 +542,478 @@ function formatTime(seconds) {
   return `${mins}:${secs}`;
 }
 
+function formatPlaybackRate(rate) {
+  return rate === 1 ? "1.0x" : `${rate}x`;
+}
+
+function applyPetStatDecay() {
+  const now = Date.now();
+  const lastAt = Number(petState.lastStatDecayAt) || now;
+  const elapsedMinutes = Math.floor((now - lastAt) / 60000);
+
+  if (elapsedMinutes <= 0) {
+    return false;
+  }
+
+  const satietyDecaySteps = Math.floor(elapsedMinutes / 30);
+  petState.satietyPoints = Math.max(0, (petState.satietyPoints || 0) - satietyDecaySteps * 5);
+  petState.affinityPoints = Math.max(0, (petState.affinityPoints || 0) - elapsedMinutes);
+  petState.cleanlinessPoints = Math.max(0, (petState.cleanlinessPoints || 0) - elapsedMinutes);
+  petState.sleepPoints = Math.max(0, (petState.sleepPoints || 0) - elapsedMinutes);
+  if (petPoopFeatureEnabled && petState.poop?.active && !petState.poop.overdueApplied) {
+    const poopAge = now - (Number(petState.poop.createdAt) || now);
+    if (poopAge >= 3600000) {
+      petState.cleanlinessPoints = Math.max(0, (petState.cleanlinessPoints || 0) - 45);
+      petState.poop.overdueApplied = true;
+    }
+  }
+  petState.lastStatDecayAt = lastAt + elapsedMinutes * 60000;
+  savePetState();
+  return true;
+}
+
+function getPetDerivedStats() {
+  applyPetStatDecay();
+  const exp = Math.floor(petState.englishSeconds / 600);
+  const satiety = Math.max(0, Math.min(100, Number(petState.satietyPoints) || 0));
+  const affinity = Math.max(0, Math.min(100, Number(petState.affinityPoints) || 0));
+  const cleanliness = Math.max(0, Math.min(100, Number(petState.cleanlinessPoints) || 0));
+  const sleep = Math.max(0, Math.min(100, Number(petState.sleepPoints) || 0));
+  const level = Math.floor(exp / 10) + 1;
+  const expProgress = (exp % 10) / 10 * 100;
+
+  let status = "健康";
+  if (satiety < 8) {
+    status = "生病";
+  } else if (satiety < 20) {
+    status = "有点饿";
+  } else if (affinity < 20) {
+    status = "不开心";
+  } else if (cleanliness < 20) {
+    status = "脏兮兮";
+  } else if (sleep < 20) {
+    status = "困困的";
+  }
+  if (petState.poop?.active && petState.poop.overdueApplied) {
+    status = "生病";
+  }
+
+  return {
+    exp,
+    satiety,
+    affinity,
+    cleanliness,
+    sleep,
+    level,
+    expProgress,
+    status,
+  };
+}
+
+function getPetOrchardMaxOffset() {
+  const handleHeight = 38;
+  const bottomGap = 6;
+  return Math.max(0, petRoom.clientHeight - handleHeight - bottomGap);
+}
+
+function setPetOrchardOffset(nextOffset) {
+  petOrchardOffset = Math.max(0, Math.min(nextOffset, getPetOrchardMaxOffset()));
+  petRoom.style.setProperty("--pet-orchard-offset", `${petOrchardOffset}px`);
+  petOrchardPull.setAttribute("aria-expanded", petOrchardOffset >= getPetOrchardMaxOffset() - 2 ? "true" : "false");
+}
+
+function isFruitBubbleReady(fruitKey) {
+  return Number(petState.orchardAvailable?.[fruitKey] || 0) > 0;
+}
+
+function renderPetOrchard() {
+  [...petOrchardBubbles.querySelectorAll("[data-fruit-bubble]")].forEach((button) => {
+    button.hidden = !isFruitBubbleReady(button.dataset.fruitBubble);
+  });
+}
+
+function showPetHarvestModal(fruitKey) {
+  const fruit = petFeedCatalog.find((item) => item.key === fruitKey);
+  if (!fruit) {
+    return;
+  }
+
+  petHarvestFruitEmoji.textContent = fruit.emoji;
+  petHarvestText.textContent = `${fruit.name}已存放至物品栏`;
+  petHarvestModal.hidden = false;
+}
+
+function hidePetHarvestModal() {
+  petHarvestModal.hidden = true;
+}
+
+function showPetSpeech(text) {
+  if (!text) {
+    return;
+  }
+
+  if (petSpeechTimer) {
+    window.clearTimeout(petSpeechTimer);
+  }
+
+  petSpeechText.textContent = text;
+  updatePetSpeechPosition();
+  petSpeechBubble.hidden = false;
+  petSpeechTimer = window.setTimeout(() => {
+    petSpeechBubble.hidden = true;
+  }, 3000);
+}
+
+function updatePetSpeechPosition() {
+  if (!petSpeechBubble || !petEggStage || !petSceneCarousel) {
+    return;
+  }
+
+  const sceneRect = petSceneCarousel.getBoundingClientRect();
+  const eggRect = petEggStage.getBoundingClientRect();
+  const centerX = eggRect.left - sceneRect.left + eggRect.width / 2;
+  const centerY = eggRect.top - sceneRect.top + eggRect.height / 2;
+  const oneCm = 38;
+
+  petSpeechBubble.style.setProperty("--pet-speech-left", `${centerX}px`);
+  petSpeechBubble.style.setProperty("--pet-speech-top", `${centerY - oneCm}px`);
+}
+
+function triggerPetFeedReaction() {
+  petFeedReactionTimer = null;
+  petEgg.classList.remove("is-feed-react");
+  void petEgg.offsetWidth;
+  petEgg.classList.add("is-feed-react");
+  showPetSpeech("好吃！");
+}
+
+function harvestOrchardFruit(fruitKey) {
+  const fruit = petFeedCatalog.find((item) => item.key === fruitKey);
+  if (!fruit || !isFruitBubbleReady(fruitKey)) {
+    return;
+  }
+
+  petState.orchardAvailable[fruitKey] = Math.max(0, (petState.orchardAvailable?.[fruitKey] || 0) - 1);
+  petState.fruitInventory[fruitKey] = (petState.fruitInventory[fruitKey] ?? 0) + 1;
+  petState.orchardHarvestedAt[fruitKey] = Date.now();
+  savePetState();
+  renderPetPage();
+  renderPetOrchard();
+  showPetHarvestModal(fruitKey);
+}
+
+function applyPetAccessories() {
+  petAccessoryHead.dataset.style = "";
+  petAccessoryFace.dataset.style = "";
+  petAccessoryClothes.dataset.style = "";
+  petEgg.dataset.mood = "";
+}
+
+function getCurrentPetScene() {
+  return petSceneConfig[currentPetSceneIndex] || petSceneConfig[0];
+}
+
+function renderPetItemGrid() {
+  const currentScene = getCurrentPetScene();
+  let cards = [];
+
+  if (currentScene.operation === "feed") {
+    cards = petFeedCatalog.map((item) => `
+      <button class="pet-item-card" data-pet-feed="${item.key}">
+        <span class="pet-item-emoji">${item.emoji}</span>
+        <span class="pet-item-name">${item.name}</span>
+        <span class="pet-item-count">${petState.fruitInventory[item.key] ?? 0}</span>
+      </button>
+    `);
+  } else if (currentScene.operation === "interaction") {
+    cards = petFaceCatalog.map((item) => `
+      <button class="pet-item-card" data-pet-interaction="${item.key}">
+        <span class="pet-item-emoji">${item.emoji}</span>
+        <span class="pet-item-name">${item.name}</span>
+      </button>
+    `);
+  } else if (currentScene.operation === "wash") {
+    cards = petWashCatalog.map((item) => `
+      <button class="pet-item-card" data-pet-wash="${item.key}">
+        <span class="pet-item-emoji">${item.emoji}</span>
+        <span class="pet-item-name">${item.name}</span>
+      </button>
+    `);
+  } else if (currentScene.operation === "rest") {
+    cards = petSleepCatalog.map((item) => `
+      <button class="pet-item-card" data-pet-rest="${item.key}">
+        <span class="pet-item-emoji">${item.emoji}</span>
+        <span class="pet-item-name">${item.name}</span>
+      </button>
+    `);
+  }
+
+  petItemGrid.innerHTML = cards.join("");
+}
+
+function renderPetSceneCarousel() {
+  const currentScene = getCurrentPetScene();
+  petRoom.dataset.scene = currentScene.key;
+  petSceneTrack.style.transform = `translateX(-${currentPetSceneIndex * 25}%)`;
+  [...petSceneTrack.querySelectorAll(".pet-scene-slide")].forEach((slide, index) => {
+    slide.classList.toggle("is-active", index === currentPetSceneIndex);
+  });
+  [...petScenePager.querySelectorAll("[data-pet-scene-target]")].forEach((button, index) => {
+    button.classList.toggle("is-active", index === currentPetSceneIndex);
+  });
+  const activeScene = petSceneTrack.querySelector(`.pet-scene-slide[data-pet-scene="${currentScene.key}"] .pet-scene`);
+  if (activeScene && petEggStage && petEggStage.parentElement !== activeScene) {
+    activeScene.appendChild(petEggStage);
+  }
+  const showOrchard = currentScene.key === "restaurant";
+  petOrchardLayer.hidden = !showOrchard;
+  petOrchardPull.hidden = !showOrchard;
+  if (!showOrchard) {
+    setPetOrchardOffset(0);
+  }
+  updatePetSpeechPosition();
+}
+
+function renderPetPage() {
+  const stats = getPetDerivedStats();
+  const currentScene = getCurrentPetScene();
+  const currentMetric = Math.max(0, Math.min(100, Number(stats[currentScene.metricKey.replace("Points", "")] ?? petState[currentScene.metricKey]) || Number(petState[currentScene.metricKey]) || 0));
+  petSceneMetricLabel.textContent = currentScene.metricLabel;
+  petSceneMetricValue.textContent = `${currentMetric}`;
+  petSceneMetricFill.style.width = `${currentMetric}%`;
+  petExpFill.style.width = `${stats.expProgress}%`;
+  petExpText.textContent = `LV ${stats.level} · EXP ${stats.exp}`;
+  petStatusText.textContent = `状态：${stats.status}`;
+  petSceneName.textContent = currentScene.name;
+  petActionName.textContent = currentScene.actionName;
+  renderPetSceneCarousel();
+  renderPetItemGrid();
+  applyPetAccessories();
+  updatePetSpeechPosition();
+  petPoopMarker.hidden = true;
+  petPoopMarker.classList.remove("is-sweeping");
+  petBroomMarker.hidden = true;
+  petBroomMarker.classList.remove("is-sweeping");
+  petCleanupBtn.hidden = true;
+}
+
+function addPetPlaybackProgress(deltaSeconds) {
+  if (!Number.isFinite(deltaSeconds) || deltaSeconds <= 0) {
+    return;
+  }
+
+  const track = currentQueue[currentTrack];
+  if (!track) {
+    return;
+  }
+
+  if (track.lang === "英语") {
+    petState.englishSeconds += deltaSeconds;
+  } else {
+    petState.generalSeconds += deltaSeconds;
+    petState.generalRewardProgress = (petState.generalRewardProgress || 0) + deltaSeconds;
+    while (petState.generalRewardProgress >= 600) {
+      petState.satietyPoints = Math.min(100, (petState.satietyPoints || 0) + 1);
+      petState.generalRewardProgress -= 600;
+    }
+  }
+
+  petState.orchardRewardProgress = (petState.orchardRewardProgress || 0) + deltaSeconds;
+  while (petState.orchardRewardProgress >= 600) {
+    const totalFruitKinds = petFeedCatalog.length;
+    const rewardIndex = Math.floor(((petState.englishSeconds || 0) + (petState.generalSeconds || 0)) / 600) % totalFruitKinds;
+    const rewardFruit = petFeedCatalog[rewardIndex]?.key || petFeedCatalog[0].key;
+    petState.orchardAvailable[rewardFruit] = (petState.orchardAvailable?.[rewardFruit] || 0) + 1;
+    petState.orchardRewardProgress -= 600;
+  }
+
+  savePetState();
+  renderPetPage();
+  renderPetOrchard();
+}
+
+function usePetFeed(feedKey) {
+  const feedItem = petFeedCatalog.find((item) => item.key === feedKey);
+  if (!feedItem || (petState.fruitInventory[feedKey] ?? 0) <= 0) {
+    return;
+  }
+
+  petState.fruitInventory[feedKey] -= 1;
+  petState.feedBonus = Math.min(100, petState.feedBonus + 5);
+  petState.satietyPoints = Math.min(100, (petState.satietyPoints || 0) + 5);
+  petState.selectedHead = "";
+  if (petPoopFeatureEnabled && !petState.poop?.active && Math.random() < 0.9) {
+    const poopPosition = createPoopSpawnPosition();
+    petState.poop = {
+      active: true,
+      selected: false,
+      createdAt: Date.now(),
+      overdueApplied: false,
+      left: poopPosition.left,
+      top: poopPosition.top,
+    };
+  }
+  savePetState();
+  renderPetPage();
+  if (petFeedReactionTimer) {
+    window.clearTimeout(petFeedReactionTimer);
+  }
+  petFeedReactionTimer = window.setTimeout(triggerPetFeedReaction, 420);
+}
+
+function togglePetPoopSelection() {
+  if (!petState.poop?.active) {
+    return;
+  }
+
+  if (petState.poop.selected) {
+    return;
+  }
+
+  petState.poop.selected = true;
+  savePetState();
+  renderPetPage();
+
+  if (petPoopSweepTimer) {
+    window.clearTimeout(petPoopSweepTimer);
+  }
+  petPoopSweepTimer = window.setTimeout(() => {
+    cleanupPetPoop();
+  }, 1080);
+}
+
+function cleanupPetPoop() {
+  if (!petState.poop?.active) {
+    return;
+  }
+
+  if (petPoopSweepTimer) {
+    window.clearTimeout(petPoopSweepTimer);
+    petPoopSweepTimer = null;
+  }
+
+  petState.poop = {
+    active: false,
+    selected: false,
+    createdAt: 0,
+    overdueApplied: false,
+    left: 50,
+    top: 334,
+  };
+  petState.cleanlinessPoints = Math.min(100, (petState.cleanlinessPoints || 0) + 10);
+  savePetState();
+  renderPetPage();
+  showPetSpeech("清理干净啦～");
+}
+
+function usePetFaceInteraction(faceKey) {
+  const item = petFaceCatalog.find((option) => option.key === faceKey);
+  if (!item) {
+    return;
+  }
+
+  petState.interactionCount += 1;
+  petState.affinityPoints = Math.min(100, (petState.affinityPoints || 0) + 5);
+  petState.selectedFace = "";
+  savePetState();
+  renderPetPage();
+  showPetSpeech(petInteractionFeedback[faceKey] || "好开心～");
+}
+
+function usePetWashAction(washKey) {
+  const item = petWashCatalog.find((option) => option.key === washKey);
+  if (!item) {
+    return;
+  }
+
+  petState.cleanlinessPoints = Math.min(100, (petState.cleanlinessPoints || 0) + 5);
+  savePetState();
+  renderPetPage();
+  showPetSpeech(item.feedback);
+}
+
+function usePetRestAction(restKey) {
+  const item = petSleepCatalog.find((option) => option.key === restKey);
+  if (!item) {
+    return;
+  }
+
+  petState.sleepPoints = Math.min(100, (petState.sleepPoints || 0) + 5);
+  savePetState();
+  renderPetPage();
+  showPetSpeech(item.feedback);
+}
+
+function updateAbMarkers(track) {
+  const duration = Math.max(1, track?.duration || 1);
+  const hasA = Number.isFinite(abLoopStart);
+  const hasB = Number.isFinite(abLoopEnd);
+
+  abMarkerA.hidden = !hasA;
+  abMarkerB.hidden = !hasB;
+
+  if (hasA) {
+    abMarkerA.style.left = `${Math.max(0, Math.min((abLoopStart / duration) * 100, 100))}%`;
+  }
+
+  if (hasB) {
+    abMarkerB.style.left = `${Math.max(0, Math.min((abLoopEnd / duration) * 100, 100))}%`;
+  }
+
+  if (hasA && hasB) {
+    abLoopBtn.classList.add("is-active");
+    abLoopLabel.textContent = "AB中";
+  } else if (hasA) {
+    abLoopBtn.classList.add("is-active");
+    abLoopLabel.textContent = "设B点";
+  } else {
+    abLoopBtn.classList.remove("is-active");
+    abLoopLabel.textContent = "AB";
+  }
+}
+
+function resetAbLoop() {
+  abLoopStart = null;
+  abLoopEnd = null;
+  if (abMarkerA) {
+    abMarkerA.hidden = true;
+  }
+  if (abMarkerB) {
+    abMarkerB.hidden = true;
+  }
+  if (abLoopBtn) {
+    abLoopBtn.classList.remove("is-active");
+  }
+  if (abLoopLabel) {
+    abLoopLabel.textContent = "AB";
+  }
+}
+
+function renderSpeedPanel() {
+  speedBtnLabel.textContent = formatPlaybackRate(currentPlaybackRate);
+  [...speedOptionList.querySelectorAll("[data-speed]")].forEach((button) => {
+    button.classList.toggle("is-active", Number(button.dataset.speed) === currentPlaybackRate);
+  });
+}
+
+function renderPlaylistPanel() {
+  const album = currentAlbumId ? findAlbumById(currentAlbumId) : null;
+  playlistPanelTitle.textContent = album?.title || "专辑播放列表";
+  playlistList.innerHTML = currentQueue
+    .map(
+      (lesson, index) => `
+        <button class="playlist-item ${index === currentTrack ? "is-current" : ""}" data-playlist-index="${index}">
+          <div class="playlist-item-main">
+            <strong>${lesson.title}</strong>
+            <span>${lesson.lang} · ${formatTime(lesson.duration)}</span>
+          </div>
+          <span class="playlist-item-status">${index === currentTrack ? "播放中" : "播放"}</span>
+        </button>
+      `,
+    )
+    .join("");
+}
+
 function renderTrack() {
   const track = currentQueue[currentTrack];
   const progressRatio = Math.max(0, Math.min(track.progress / track.duration, 1));
@@ -284,7 +1024,16 @@ function renderTrack() {
   totalTimeEl.textContent = formatTime(track.duration);
   progressFill.style.width = `${progressRatio * 100}%`;
   progressThumb.style.left = `${progressRatio * 100}%`;
-  playBtn.classList.toggle("is-paused", !isPlaying);
+  playBtn.dataset.state = isPlaying ? "playing" : "paused";
+  playBtn.setAttribute("aria-label", isPlaying ? "暂停播放" : "开始播放");
+  renderSpeedPanel();
+  updateAbMarkers(track);
+  renderPlaylistPanel();
+
+  const coverUrl = track.albumCoverUrl || track.coverUrl || "";
+  playAlbumArt.innerHTML = coverUrl
+    ? `<div class="album-art-image" style="background-image: url('${coverUrl}')"></div>`
+    : '<span class="album-accent"></span>';
 
   const resourceNav = navItems.find((item) => item.dataset.nav === "resource");
   if (resourceNav?.classList.contains("is-active")) {
@@ -335,6 +1084,8 @@ function syncAudioTrack({ autoplay = isPlaying } = {}) {
     appAudio.load();
   }
 
+  appAudio.playbackRate = currentPlaybackRate;
+
   if (track.progress > 0 && Math.abs(appAudio.currentTime - track.progress) > 1) {
     try {
       appAudio.currentTime = track.progress;
@@ -344,16 +1095,68 @@ function syncAudioTrack({ autoplay = isPlaying } = {}) {
   }
 
   if (autoplay) {
+    isPlaying = true;
+    pendingAutoplay = true;
+    renderTrack();
     const playPromise = appAudio.play();
     if (playPromise?.catch) {
       playPromise.catch(() => {
+        pendingAutoplay = false;
         isPlaying = false;
         renderTrack();
       });
     }
   } else {
+    pendingAutoplay = false;
     appAudio.pause();
   }
+}
+
+function closePlayOverlays() {
+  speedPanel.hidden = true;
+  playlistPanel.hidden = true;
+}
+
+function setPlaybackRate(rate) {
+  currentPlaybackRate = rate;
+  appAudio.playbackRate = rate;
+  renderSpeedPanel();
+}
+
+function toggleSpeedPanel() {
+  const opening = speedPanel.hidden;
+  closePlayOverlays();
+  speedPanel.hidden = !opening;
+}
+
+function togglePlaylistPanel() {
+  const opening = playlistPanel.hidden;
+  closePlayOverlays();
+  if (opening) {
+    renderPlaylistPanel();
+  }
+  playlistPanel.hidden = !opening;
+}
+
+function toggleAbLoop() {
+  const track = currentQueue[currentTrack];
+  if (!track) {
+    return;
+  }
+
+  const currentPoint = Math.max(0, Math.min(Math.round(appAudio.currentTime || track.progress || 0), track.duration));
+
+  if (!Number.isFinite(abLoopStart)) {
+    abLoopStart = currentPoint;
+    abLoopEnd = null;
+  } else if (!Number.isFinite(abLoopEnd) && currentPoint > abLoopStart) {
+    abLoopEnd = currentPoint;
+  } else {
+    abLoopStart = currentPoint;
+    abLoopEnd = null;
+  }
+
+  renderTrack();
 }
 
 function updateTitleMarquee() {
@@ -631,9 +1434,10 @@ function playAlbumLesson(index) {
     return;
   }
 
-  currentQueue = album.lessons.map((lesson) => ({ ...lesson }));
+  currentQueue = album.lessons.map((lesson) => ({ ...lesson, albumCoverUrl: album.coverUrl || lesson.coverUrl || "" }));
   currentTrack = index;
   isPlaying = true;
+  resetAbLoop();
   previousPageBeforePlay = "album-detail";
   renderTrack();
   syncAudioTrack({ autoplay: true });
@@ -1049,6 +1853,7 @@ function setPage(pageName) {
     playBackBtn.hidden = !previousPageBeforePlay;
   } else {
     playBackBtn.hidden = true;
+    closePlayOverlays();
   }
 
   const shouldHideNav = pageName === "resource-search"
@@ -1057,6 +1862,10 @@ function setPage(pageName) {
 
   if (pageName === "resource" && resourcePage) {
     resourcePage.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  if (pageName === "pet") {
+    renderPetPage();
   }
 
   if (pageName !== "resource") {
@@ -1085,6 +1894,7 @@ function togglePlayback() {
 function stepTrack(direction) {
   currentTrack = (currentTrack + direction + currentQueue.length) % currentQueue.length;
   currentQueue[currentTrack].progress = 0;
+  resetAbLoop();
   renderTrack();
   syncAudioTrack({ autoplay: isPlaying });
 }
@@ -1117,6 +1927,9 @@ function adjustVolume(delta) {
 navItems.forEach((item) => {
   item.addEventListener("click", () => {
     previousPageBeforePlay = null;
+    if (item.dataset.nav === "play") {
+      resetAbLoop();
+    }
     setPage(item.dataset.nav);
   });
 });
@@ -1165,10 +1978,26 @@ appAudio.addEventListener("timeupdate", () => {
     return;
   }
 
+  if (Number.isFinite(abLoopStart) && Number.isFinite(abLoopEnd) && appAudio.currentTime >= abLoopEnd) {
+    try {
+      appAudio.currentTime = abLoopStart;
+      track.progress = Math.round(abLoopStart);
+    } catch {
+      // ignore seek errors during loop jump
+    }
+  }
+
   track.progress = Math.max(0, Math.round(appAudio.currentTime || 0));
   if (Number.isFinite(appAudio.duration) && appAudio.duration > 0) {
     track.duration = Math.max(1, Math.round(appAudio.duration));
   }
+  if (typeof lastAnalyticsUpdateAt === "number") {
+    const delta = Math.max(0, (appAudio.currentTime || 0) - lastAnalyticsUpdateAt);
+    if (delta > 0 && delta < 5) {
+      addPetPlaybackProgress(delta);
+    }
+  }
+  lastAnalyticsUpdateAt = appAudio.currentTime || 0;
   renderTrack();
 });
 
@@ -1177,11 +2006,17 @@ appAudio.addEventListener("ended", () => {
 });
 
 appAudio.addEventListener("play", () => {
+  pendingAutoplay = false;
   isPlaying = true;
+  lastAnalyticsUpdateAt = appAudio.currentTime || 0;
   renderTrack();
 });
 
 appAudio.addEventListener("pause", () => {
+  if (pendingAutoplay) {
+    return;
+  }
+  lastAnalyticsUpdateAt = null;
   if (!appAudio.ended) {
     isPlaying = false;
     renderTrack();
@@ -1242,7 +2077,13 @@ detailDescModal.addEventListener("click", (event) => {
   }
 });
 
-ageFilterBtn.addEventListener("click", toggleAgeDropdown);
+ageFilterPicker?.addEventListener("click", (event) => {
+  const option = event.target.closest("[data-age-range]");
+  if (option || ageDropdown.contains(event.target)) {
+    return;
+  }
+  toggleAgeDropdown();
+});
 discoverFilterBtn.addEventListener("click", openFilterSheet);
 filterBackBtn.addEventListener("click", () => closeFilterSheet());
 filterConfirmBtn.addEventListener("click", () => {
@@ -1364,7 +2205,7 @@ filterResultsTags.addEventListener("click", (event) => {
 });
 
 document.addEventListener("click", (event) => {
-  if (!ageDropdown.contains(event.target) && event.target !== ageFilterBtn) {
+  if (!ageFilterPicker?.contains(event.target) && !ageDropdown.contains(event.target)) {
     ageDropdown.classList.remove("is-open");
   }
 });
@@ -1372,6 +2213,156 @@ document.addEventListener("click", (event) => {
 playBtn.addEventListener("click", togglePlayback);
 prevBtn.addEventListener("click", () => stepTrack(-1));
 nextBtn.addEventListener("click", () => stepTrack(1));
+speedBtn.addEventListener("click", toggleSpeedPanel);
+abLoopBtn.addEventListener("click", toggleAbLoop);
+playlistBtn.addEventListener("click", togglePlaylistPanel);
+speedPanelCloseBtn.addEventListener("click", closePlayOverlays);
+playlistPanelCloseBtn.addEventListener("click", closePlayOverlays);
+
+speedPanel.addEventListener("click", (event) => {
+  if (event.target === speedPanel) {
+    closePlayOverlays();
+  }
+});
+
+playlistPanel.addEventListener("click", (event) => {
+  if (event.target === playlistPanel) {
+    closePlayOverlays();
+  }
+});
+
+speedOptionList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-speed]");
+  if (!button) {
+    return;
+  }
+
+  setPlaybackRate(Number(button.dataset.speed));
+  closePlayOverlays();
+});
+
+playlistList.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-playlist-index]");
+  if (!button) {
+    return;
+  }
+
+  currentTrack = Number(button.dataset.playlistIndex);
+  currentQueue[currentTrack].progress = 0;
+  resetAbLoop();
+  isPlaying = true;
+  renderTrack();
+  syncAudioTrack({ autoplay: true });
+  closePlayOverlays();
+});
+
+petScenePager.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-pet-scene-target]");
+  if (!button) {
+    return;
+  }
+
+  currentPetSceneIndex = Math.max(0, petSceneConfig.findIndex((item) => item.key === button.dataset.petSceneTarget));
+  renderPetPage();
+});
+
+petItemGrid.addEventListener("click", (event) => {
+  const feedButton = event.target.closest("[data-pet-feed]");
+  if (feedButton) {
+    usePetFeed(feedButton.dataset.petFeed);
+    return;
+  }
+
+  const interactionButton = event.target.closest("[data-pet-interaction]");
+  if (interactionButton) {
+    usePetFaceInteraction(interactionButton.dataset.petInteraction);
+    return;
+  }
+
+  const washButton = event.target.closest("[data-pet-wash]");
+  if (washButton) {
+    usePetWashAction(washButton.dataset.petWash);
+    return;
+  }
+
+  const restButton = event.target.closest("[data-pet-rest]");
+  if (restButton) {
+    usePetRestAction(restButton.dataset.petRest);
+  }
+});
+
+petSceneCarousel.addEventListener("pointerdown", (event) => {
+  isDraggingPetScene = true;
+  petSceneSwipeStartX = event.clientX;
+});
+
+petSceneCarousel.addEventListener("pointerup", (event) => {
+  if (!isDraggingPetScene) {
+    return;
+  }
+
+  const deltaX = event.clientX - petSceneSwipeStartX;
+  isDraggingPetScene = false;
+  if (Math.abs(deltaX) < 40) {
+    return;
+  }
+
+  if (deltaX < 0 && currentPetSceneIndex < petSceneConfig.length - 1) {
+    currentPetSceneIndex += 1;
+  } else if (deltaX > 0 && currentPetSceneIndex > 0) {
+    currentPetSceneIndex -= 1;
+  }
+  renderPetPage();
+});
+
+petSceneCarousel.addEventListener("pointerleave", () => {
+  isDraggingPetScene = false;
+});
+
+petOrchardPull.addEventListener("pointerdown", (event) => {
+  isDraggingPetOrchard = true;
+  petOrchardDragMoved = false;
+  petOrchardStartY = event.clientY;
+  petOrchardStartOffset = petOrchardOffset;
+  petOrchardPull.setPointerCapture?.(event.pointerId);
+});
+
+petOrchardPull.addEventListener("click", () => {
+  if (petOrchardDragMoved) {
+    petOrchardDragMoved = false;
+    return;
+  }
+  setPetOrchardOffset(petOrchardOffset > 40 ? 0 : getPetOrchardMaxOffset());
+});
+
+petOrchardBubbles.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-fruit-bubble]");
+  if (!button) {
+    return;
+  }
+
+  harvestOrchardFruit(button.dataset.fruitBubble);
+});
+
+petPoopMarker?.addEventListener("click", () => {
+  return;
+});
+
+petCleanupBtn?.addEventListener("click", () => {
+  return;
+});
+
+petEgg?.addEventListener("click", () => {
+  showPetSpeech("主人，今天的故事好听吗？");
+});
+
+petHarvestConfirmBtn.addEventListener("click", hidePetHarvestModal);
+petHarvestModal.addEventListener("click", (event) => {
+  if (event.target === petHarvestModal) {
+    hidePetHarvestModal();
+  }
+});
+
 lockKnob.addEventListener("click", enterChildLockMode);
 
 lockSwipeZone.addEventListener("pointerdown", (event) => {
@@ -1476,15 +2467,46 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+window.addEventListener("pointermove", (event) => {
+  if (!isDraggingPetOrchard) {
+    return;
+  }
+
+  if (Math.abs(event.clientY - petOrchardStartY) > 6) {
+    petOrchardDragMoved = true;
+  }
+  setPetOrchardOffset(petOrchardStartOffset + (event.clientY - petOrchardStartY));
+});
+
+window.addEventListener("pointerup", () => {
+  if (!isDraggingPetOrchard) {
+    return;
+  }
+
+  isDraggingPetOrchard = false;
+  setPetOrchardOffset(petOrchardOffset > getPetOrchardMaxOffset() * 0.42 ? getPetOrchardMaxOffset() : 0);
+});
+
 window.addEventListener("resize", () => {
   fitDeviceToViewport();
   updateLockScreenInfo();
   requestAnimationFrame(updateTitleMarquee);
+  requestAnimationFrame(updatePetSpeechPosition);
 });
 
+isPlaying = false;
 renderTrack();
 syncAudioTrack({ autoplay: false });
 renderResourceTab(currentResourceTab);
+initPetCleanupAssets();
+renderPetPage();
+setPetOrchardOffset(0);
 fitDeviceToViewport();
 updateLockScreenInfo();
 setInterval(updateLockScreenInfo, 60000);
+orchardRefreshTimer = window.setInterval(renderPetOrchard, 15000);
+window.setInterval(() => {
+  if (currentPage === "pet") {
+    renderPetPage();
+  }
+}, 15000);

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>胖虎小龙虾 UI 原型</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="workspace">
+    <aside class="history-panel">
+      <div class="history-header">
+        <div class="history-title">历史对话</div>
+        <div id="history-role" class="history-role">当前角色：胖虎</div>
+      </div>
+      <div id="history-list" class="history-list">
+        <div class="history-empty">暂无对话记录</div>
+      </div>
+    </aside>
+
+    <div class="screen">
+      <!-- 状态层 -->
+      <div class="status-bar">
+        <span>16:30</span>
+        <span>WIFI 100%</span>
+      </div>
+
+      <button id="qa-home-back-btn" class="qa-home-back-btn hidden" type="button" aria-label="返回入口">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+
+      <section id="feature-gateway" class="feature-gateway">
+        <div class="feature-gateway-status">
+          <span>16:30</span>
+          <span>WIFI 100%</span>
+        </div>
+        <div class="feature-gateway-inner">
+          <button id="enter-qa-btn" class="feature-entry-btn feature-entry-qa" type="button" aria-label="进入AI问答">
+            <div class="feature-entry-avatar">
+              <img id="qa-entry-avatar-img" src="assets/胖虎形象.jpg" alt="当前角色">
+            </div>
+            <div class="feature-entry-title">AI问答</div>
+          </button>
+
+          <button id="enter-pet-btn" class="feature-entry-btn feature-entry-pet" type="button" aria-label="进入AI宠物">
+            <div class="feature-entry-avatar">
+              <img src="assets/pet_baby.png" alt="AI宠物幼崽形象">
+            </div>
+            <div class="feature-entry-title">AI宠物</div>
+          </button>
+        </div>
+      </section>
+      
+      <!-- 内容区 -->
+      <div class="content">
+        <section id="pet-page" class="pet-page hidden">
+          <div class="pet-top-row">
+            <div class="pet-level-card">
+              <div id="pet-level-text" class="pet-level-text">AI宠物 Lv.1/5</div>
+              <div class="pet-level-track">
+                <div id="pet-level-bar" class="pet-level-bar"></div>
+              </div>
+            </div>
+            <div class="pet-energy-card">
+              <div id="pet-energy-text" class="pet-energy-text">精力 100%</div>
+              <div class="pet-energy-track">
+                <div id="pet-energy-bar" class="pet-energy-bar"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pet-main-stage">
+            <div class="pet-affection-panel">
+              <div class="pet-affection-label">好感度</div>
+              <div class="pet-affection-track">
+                <div id="pet-affection-bar" class="pet-affection-bar"></div>
+              </div>
+              <div id="pet-affection-text" class="pet-affection-text">0%</div>
+            </div>
+
+            <div class="pet-center-wrap">
+              <div id="pet-reaction-bubble" class="pet-reaction-bubble hidden">你好呀~</div>
+              <button id="pet-character-btn" class="pet-character-btn" type="button" aria-label="戳一戳宠物">
+                <img src="assets/pet_baby.png" alt="AI宠物形象">
+              </button>
+            </div>
+          </div>
+
+          <div id="pet-actions-default" class="pet-actions-default">
+            <button id="pet-play-btn" class="pet-mode-btn" type="button">玩耍</button>
+            <button id="pet-feed-btn" class="pet-mode-btn" type="button">喂养</button>
+          </div>
+
+          <div id="pet-actions-play" class="pet-actions-play hidden">
+            <button id="pet-play-back-btn" class="pet-play-back-btn" type="button" aria-label="退出玩耍">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <button id="pet-play-mic-btn" class="pet-play-mic-btn" type="button">
+              <span class="pet-play-mic-icon">🎤</span>
+              <span id="pet-play-mic-text">和宠物聊天</span>
+            </button>
+          </div>
+
+          <div id="pet-backpack" class="pet-backpack">
+            <div id="pet-backpack-handle" class="pet-backpack-handle"></div>
+            <div class="pet-backpack-title">背包</div>
+            <div id="pet-food-list" class="pet-food-list"></div>
+          </div>
+
+          <button id="pet-page-back-btn" class="pet-page-back-btn" type="button" aria-label="返回入口">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+        </section>
+
+        <section id="role-page" class="role-page hidden">
+          <div id="role-track" class="role-page-track"></div>
+          <div id="role-dots" class="role-dots"></div>
+          <button id="role-apply-btn" class="role-apply-btn" type="button">✓ 确认切换</button>
+        </section>
+
+        <div class="character-wrapper">
+          <video src="assets/打招呼.mp4" id="panghu-video" class="character-video" autoplay loop muted playsinline></video>
+          <img src="assets/胖虎形象.jpg" id="panghu-img" class="character-video hidden" alt="角色">
+        </div>
+        
+        <div id="mic-icon" class="mic-icon hidden">
+          🎤
+        </div>
+        
+        <div id="loading" class="loading hidden">
+          <div class="spinner"></div>
+        </div>
+        
+        <!-- 卡片或气泡回复 -->
+        <div id="response-bubble" class="response-bubble hidden">
+          别怕，我在！这就帮你安排~
+        </div>
+
+        <div id="cards-panel" class="cards-panel hidden"></div>
+
+        <button id="libai-entry-btn" class="libai-entry-btn hidden" type="button">诗集</button>
+
+        <section id="libai-page" class="libai-page hidden">
+          <div class="libai-head">
+            <button id="libai-back-btn" class="libai-back-btn" type="button" aria-label="返回">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <div class="libai-title-wrap">
+              <div class="libai-title">李白诗集</div>
+            </div>
+          </div>
+          <div id="libai-current-title" class="libai-current-title">称号加载中...</div>
+          <div class="libai-progress-row">
+            <div id="libai-progress-text" class="libai-progress-text">0 / 20</div>
+            <div class="libai-progress-track">
+              <div id="libai-progress-bar" class="libai-progress-bar"></div>
+            </div>
+          </div>
+          <div id="libai-poems" class="libai-poems"></div>
+
+          <div id="libai-poem-modal" class="libai-modal-overlay hidden">
+            <div class="libai-modal">
+              <button id="libai-modal-close" class="libai-modal-close" type="button">✕</button>
+              <div id="libai-modal-body" class="libai-modal-body"></div>
+              <div id="libai-line-explain" class="libai-line-explain hidden"></div>
+              <div class="libai-modal-actions">
+                <button id="libai-explain-btn" class="libai-action-btn libai-explain-btn" type="button">讲解</button>
+                <button id="libai-recite-btn" class="libai-action-btn libai-recite-btn" type="button">开始背诵</button>
+              </div>
+              <div id="libai-explain-panel" class="libai-explain-panel hidden"></div>
+            </div>
+            <button id="libai-modal-ask-btn" class="libai-modal-ask-btn" type="button">按住提问</button>
+          </div>
+        </section>
+      </div>
+      
+      <!-- 底部按钮 -->
+      <div class="controls">
+        <div id="waves" class="waves hidden">
+          <div class="wave"></div>
+          <div class="wave"></div>
+          <div class="wave"></div>
+        </div>
+        <div class="control-row">
+          <button id="role-trigger" class="role-trigger" type="button" aria-label="打开角色选择">
+            <span id="role-trigger-avatar" class="role-trigger-avatar">🐯</span>
+          </button>
+
+          <div id="talk-btn" class="talk-btn">
+            <svg id="mic-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="36" height="36">
+              <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/>
+              <path d="M17.25 11.25a.75.75 0 0 0-1.5 0A3.75 3.75 0 0 1 12 15a3.75 3.75 0 0 1-3.75-3.75.75.75 0 0 0-1.5 0 5.25 5.25 0 0 0 4.5 5.196V18H9.75a.75.75 0 0 0 0 1.5h4.5a.75.75 0 0 0 0-1.5H12.75v-2.554a5.25 5.25 0 0 0 4.5-5.196z"/>
+            </svg>
+            <div id="soundwave-bars" class="soundwave-bars hidden">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+          </div>
+
+          <button id="text-toggle-btn" class="text-toggle-btn" type="button" aria-label="文字输入">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6d4b37" width="24" height="24">
+              <path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="text-input-panel" class="text-input-panel">
+        <button id="chat-file-btn" type="button" aria-label="上传音频或视频">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6d4b37" width="20" height="20">
+            <path d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.29a1 1 0 1 1 1.4 1.42l-4 3.98a1 1 0 0 1-1.4 0l-4-3.98a1 1 0 0 1 1.4-1.42L11 12.59V4a1 1 0 0 1 1-1z"/>
+            <path d="M5 18a1 1 0 0 1 1-1h12a1 1 0 1 1 0 2H6a1 1 0 0 1-1-1z"/>
+          </svg>
+        </button>
+        <input type="file" id="chat-file-input" accept="audio/*,video/*" hidden>
+        <input type="text" id="chat-input" placeholder="和胖虎聊点什么吧..." autocomplete="off">
+        <button id="chat-send-btn" type="button" aria-label="发送">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+        </button>
+        <button id="chat-close-btn" type="button">✕</button>
+      </div>
+
+      <div id="file-drop-hint" class="file-drop-hint hidden">松开即可上传音频或视频</div>
+    </div>
+
+    <aside class="debug-panel">
+      <div class="debug-header">
+        <div class="debug-title">执行面板</div>
+        <div class="debug-subtitle">实时看当前走到哪一步，出错会直接显示</div>
+      </div>
+
+      <div class="debug-block">
+        <div class="debug-label">当前流程</div>
+        <div id="debug-flow-status" class="debug-flow-status">待机中</div>
+        <div id="debug-flow-log" class="debug-flow-log">
+          <div class="debug-flow-item is-idle">
+            <span class="debug-flow-dot"></span>
+            <div class="debug-flow-content">
+              <div class="debug-flow-title">等待操作</div>
+              <div class="debug-flow-meta">还没有开始新的请求</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="debug-block">
+        <div class="debug-label">语音转写</div>
+        <pre id="debug-transcript" class="debug-value">等待输入</pre>
+      </div>
+
+      <div class="debug-block">
+        <div class="debug-label">执行动作</div>
+        <div id="debug-action" class="debug-value">-</div>
+        <details class="debug-details">
+          <summary>查看详情</summary>
+          <pre id="debug-action-detail" class="debug-detail-value">-</pre>
+        </details>
+      </div>
+
+      <div class="debug-block">
+        <div class="debug-label">返回卡片</div>
+        <div id="debug-cards" class="debug-value">无</div>
+        <details class="debug-details">
+          <summary>查看详情</summary>
+          <pre id="debug-cards-detail" class="debug-detail-value">[]</pre>
+        </details>
+      </div>
+
+      <div class="debug-block">
+        <div class="debug-label">状态快照</div>
+        <div id="debug-state" class="debug-value">-</div>
+        <details class="debug-details">
+          <summary>查看详情</summary>
+          <pre id="debug-state-detail" class="debug-detail-value">-</pre>
+        </details>
+      </div>
+    </aside>
+  </div>
+
+  <div id="ui-scale-controls" class="ui-scale-controls" aria-label="页面缩放控制">
+    <button id="ui-scale-down" type="button" aria-label="缩小页面">−</button>
+    <button id="ui-scale-reset" type="button" aria-label="重置缩放">100%</button>
+    <button id="ui-scale-up" type="button" aria-label="放大页面">＋</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
